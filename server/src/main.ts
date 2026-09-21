@@ -9,9 +9,9 @@ async function bootstrap() {
   
   // Habilitar CORS
   app.enableCors({
-    origin: 'http://localhost:5173', // Puerto del cliente Vite
-    credentials: true,
-  });
+  origin: true,
+  credentials: true,
+});
 
   // Habilitar validación global
   app.useGlobalPipes(new ValidationPipe({

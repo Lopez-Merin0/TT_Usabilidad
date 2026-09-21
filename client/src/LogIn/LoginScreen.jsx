@@ -135,10 +135,10 @@ const LoginScreen = () => {
                     throw new Error('Error saving authentication data');
                 }
 
-                await loadUserProgress(userData.id || userData._id, tokenToSave);
+                loadUserProgress(userData.id || userData._id, tokenToSave);
                 sessionStorage.removeItem('progressLoaded');
                 setMessage('Log in successful! Welcome home...');
-                
+
                 navigate('/room', { replace: true });
                 
             } else {

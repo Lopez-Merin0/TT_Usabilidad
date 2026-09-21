@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:5000';
+const API_URL = 'https://talkie-town-api.onrender.com';
 
 export const registerUser = async (userData) => {
     try {

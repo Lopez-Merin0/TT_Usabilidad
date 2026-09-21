@@ -35,7 +35,7 @@ export const GlobalProgressProvider: React.FC<{ children: ReactNode }> = ({ chil
 
             console.log('Cargando progreso para usuario ID:', userId);
 
-            const response = await fetch(`http://localhost:5000/api/progress/${userId}`, {
+            const response = await fetch(`https://talkie-town-api.onrender.com/api/progress/${userId}`, {
                 headers: {
                     'Authorization': `Bearer ${authToken}`
                 }
@@ -126,7 +126,7 @@ export const GlobalProgressProvider: React.FC<{ children: ReactNode }> = ({ chil
             console.log('=== Guardando en servidor ===');
             console.log('Payload:', JSON.stringify(payload, null, 2));
 
-            const response = await fetch('http://localhost:5000/api/save-progress', {
+            const response = await fetch('https://talkie-town-api.onrender.com/api/save-progress', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

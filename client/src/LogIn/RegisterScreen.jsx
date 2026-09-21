@@ -75,7 +75,7 @@ const RegisterScreen = () => {
       console.error('Error completo en registro:', error);
       
       if (error.message.includes('Failed to fetch') || error.message.includes('ERR_CONNECTION_REFUSED')) {
-        setMessage('Unable to connect to the server. Make sure the backend is running at http://localhost:5000');
+        setMessage('Unable to connect to the server. Make sure the backend is running at https://talkie-town-api.onrender.com');
       } else {
         const errorMsg = error.message || 'Unknown registration error.';
         setMessage(errorMsg);

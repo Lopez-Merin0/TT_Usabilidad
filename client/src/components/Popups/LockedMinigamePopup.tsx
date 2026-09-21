@@ -27,7 +27,7 @@ const LockedMinigamePopup: React.FC<LockedMinigamePopupProps> = ({ message, onCl
                     border: '3px solid #4169e1',
                 }}
             >
-                Aceptar
+                Accept
             </button>
         </div>
     </div>

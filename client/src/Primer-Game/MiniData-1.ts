@@ -37,8 +37,8 @@ export interface MinigameQuestion {
 export const MINIGAME_QUESTIONS: MinigameQuestion[] = [
     {
         id: 1,
-        word: 'Taza',
-        rules: 'Se te dará el nombre de un objeto. Tu misión es seleccionar la imagen que corresponde a esa palabra.',
+        word: 'Cup',
+        rules: 'You will be given the name of an object. Your mission is to select the image that matches the word.',
         options: [
             {
                 id: 1,
@@ -63,27 +63,27 @@ export const MINIGAME_QUESTIONS: MinigameQuestion[] = [
         ],
 
         dialogue: {
-            introTitle: '☕ ¡Bienvenido a El Rincón del Café!',
+            introTitle: '☕ Welcome to Word Hunt!',
 
             introGreeting: [
-                '¡Hola! ¡Qué alegría verte en nuestro acogedor "Rincón del Café"!',
-                '¿Sabías que este lugar, antes de ser una cafetería, era solo un pequeño arbusto de café silvestre?',
-                'Lo cultivamos con cariño hasta convertirlo en el refugio lleno de historias y aroma que es hoy.',
-                'Pero antes de que te relajes con tu bebida, tengo un pequeño y divertido desafío para ti. ¡Demuéstranos que conoces nuestros tesoros!',
+                'Hello! It is wonderful to see you in Word Hunt!',
+                'Did you know this place was once just a small wild coffee bush?',
+                'We carefully cultivated it into the story-filled, aromatic refuge it is today.',
+                'Before you relax with your drink, I have a fun little challenge for you. Show us that you know our treasures!',
             ],
 
-            correctFeedback: '¡Felicidades, esa es la actitud de un verdadero explorador! ¡La palabra "{word}" es tuya! ¡Continúa con tu dulce aventura!',
-            wrongAttempt1: '¡Ups! Parece que esa no era la imagen correcta, pero no te preocupes, el café se disfruta hasta el último sorbo Te queda una oportunidad más para conseguir la palabra "{word}". ¡Tú puedes!',
-            wrongAttempt2: 'No te rindas, a veces el aroma nos distrae.". ¡No pasa nada! El verdadero premio es la experiencia. Cierra esta ventana y sigue disfrutando del Rincón.',
+            correctFeedback: 'Congratulations, that is the attitude of a true explorer! The word "{word}" is yours! Keep enjoying your sweet adventure!',
+            wrongAttempt1: 'Oops! That does not seem to be the right image, but do not worry. You have one more chance to find the word "{word}". You can do it!',
+            wrongAttempt2: 'Do not give up. Sometimes the aroma distracts us. The real prize is the experience. Close this window and keep enjoying the Corner.',
 
-            instruction: 'Tu misión es clara: Demuéstranos que sabes reconocer los tesoros de nuestra cafetería. Selecciona la imagen que corresponde a la palabra de arriba.',
-            questionHeader: 'Encuentra el tesoro: ',
+            instruction: 'Your mission is clear: show us that you can recognize the treasures in our cafe. Select the image that matches the word above.',
+            questionHeader: 'Find the treasure: ',
         }
     },
     {
         id: 2,
-        word: 'Manzana',
-        rules: 'Se te dará el nombre de un objeto. Tu misión es seleccionar la imagen que corresponde a esa palabra.',
+        word: 'Apple',
+        rules: 'You will be given the name of an object. Your mission is to select the image that matches the word.',
         options: [
             {
                 id: 1,
@@ -91,9 +91,9 @@ export const MINIGAME_QUESTIONS: MinigameQuestion[] = [
                 isCorrect: false,
             },
             {
-                id: 2,
-                imagePath: MANZANA,
-                isCorrect: true,
+                id: 4,
+                imagePath: LLAVE,
+                isCorrect: false,
             },
             {
                 id: 3,
@@ -101,19 +101,19 @@ export const MINIGAME_QUESTIONS: MinigameQuestion[] = [
                 isCorrect: false,
             },
             {
-                id: 4,
-                imagePath: LLAVE,
-                isCorrect: false,
+                id: 2,
+                imagePath: MANZANA,
+                isCorrect: true,
             },
         ],
         dialogue: {
-            introTitle: '☕ ¡Segundo Desafío!',
-            introGreeting: '¡Excelente! Ahora vamos con el segundo tesoro. ¿Puedes identificar la manzana?',
-            correctFeedback: '¡Perfecto! Has completado todos los desafíos. ¡Eres un verdadero conocedor de manzanas!',
-            wrongAttempt1: '¡Casi! El color de la manzana es inconfundible. Tienes una oportunidad más para encontrar "{word}".',
-            wrongAttempt2: 'No importa, lo importante es aprender.". ¡Inténtalo de nuevo!',
-            instruction: 'Segundo desafío: Selecciona la imagen que corresponde a la palabra de arriba.',
-            questionHeader: 'Encuentra el tesoro: ',
+            introTitle: '☕ Second Challenge!',
+            introGreeting: 'Excellent! Now let us find the second treasure. Can you identify the apple?',
+            correctFeedback: 'Perfect! You have completed all the challenges. You are a true apple expert!',
+            wrongAttempt1: 'Almost! The apple color is unmistakable. You have one more chance to find "{word}".',
+            wrongAttempt2: 'That is okay; learning is what matters. Try again!',
+            instruction: 'Second challenge: select the image that matches the word above.',
+            questionHeader: 'Find the treasure: ',
         }
     }
 ];

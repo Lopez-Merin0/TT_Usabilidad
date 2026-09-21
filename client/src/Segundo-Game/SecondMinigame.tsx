@@ -152,13 +152,13 @@ const SecondMinigame: React.FC<SecondMinigameProps> = ({ userName }) => {
                 {isLastDialog && (
                     <>
                         <br /><br />
-                        Reglas: {rules} <br />
-                        Bonus: Tienes 2 oportunidades para adivinar.
+                        Rules: {rules} <br />
+                        Bonus: You have 2 chances to guess.
                     </>
                 )}
             </p>
             <p style={{ marginTop: '5px', fontSize: '0.75rem', color: KAWAI_COLORS.textDark }}>
-                Presiona {buttonText.replace(/\*\*/g, '')} para seguir la conversación.
+                Press {buttonText.replace(/\*\*/g, '')} to continue the conversation.
             </p>
         </>
     );
@@ -175,7 +175,7 @@ const SecondMinigame: React.FC<SecondMinigameProps> = ({ userName }) => {
                 </span>
             </h3>
             <p style={{ marginTop: '5px', fontSize: '0.75rem', color: KAWAI_COLORS.textDark }}>
-                ¡Este es tu intento {attempts + 1} de 2!
+                This is attempt {attempts + 1} of 2!
             </p>
         </>
     );
@@ -210,7 +210,7 @@ const SecondMinigame: React.FC<SecondMinigameProps> = ({ userName }) => {
                     disabled={showExitConfirmation}
                     style={logoutButtonStyle}
                 >
-                    Regresar al Mapa
+                    Return to Map
                 </button>
 
                 <div style={{
@@ -225,7 +225,7 @@ const SecondMinigame: React.FC<SecondMinigameProps> = ({ userName }) => {
                     fontSize: '0.9rem',
                     zIndex: 20,
                 }}>
-                    Pregunta {currentQuestionIndex + 1} de {MINIGAME_2_QUESTIONS.length}
+                    Question {currentQuestionIndex + 1} of {MINIGAME_2_QUESTIONS.length}
                 </div>
 
                 {!showStory && (

@@ -15,10 +15,10 @@ const CompletedMinigamePopup: React.FC<CompletedMinigamePopupProps> = ({ minigam
                 maxWidth: '400px',
             }}>
             <p className="text-xl font-bold mb-2" style={{ color: '#333333' }}>
-                ¡Felicidades!
+                Congratulations!
             </p>
             <p className="text-base mb-4" style={{ color: '#666666' }}>
-                Ya completaste el <strong>{minigameName}</strong> con todas sus actividades.
+                You have completed <strong>{minigameName}</strong> and all its activities.
             </p>
             <button
                 onClick={onClose}
@@ -29,7 +29,7 @@ const CompletedMinigamePopup: React.FC<CompletedMinigamePopupProps> = ({ minigam
                     border: '3px solid #32CD32',
                 }}
             >
-                Aceptar
+                    Accept
             </button>
         </div>
     </div>

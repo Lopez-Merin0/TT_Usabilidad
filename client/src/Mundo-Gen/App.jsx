@@ -56,12 +56,12 @@ const App = () => {
     if (userData) {
       try {
         const parsedData = JSON.parse(userData);
-        return parsedData.username || 'Usuario';
+        return parsedData.username || 'Player';
       } catch {
-        return 'Usuario';
+        return 'Player';
       }
     }
-    return 'Usuario';
+    return 'Player';
   };
 
   return (
@@ -89,7 +89,7 @@ const App = () => {
                   cursor: 'pointer',
                   fontSize: '1.2rem'
                 }}
-                title={isMusicEnabled ? "Silenciar Música" : "Activar Música"}
+                title={isMusicEnabled ? "Mute music" : "Enable music"}
               >
                 {isMusicEnabled ? '🔊' : '🔇'}
               </button>
@@ -116,7 +116,7 @@ const App = () => {
                       color: '#333',
                     }}
                   >
-                    Volumen: {Math.round(musicVolume * 100)}%
+                    Volume: {Math.round(musicVolume * 100)}%
                   </label>
                   <input
                     type="range"
@@ -144,7 +144,7 @@ const App = () => {
                       color: 'white',
                     }}
                   >
-                    {isMusicEnabled ? 'Silenciar' : 'Activar'}
+                    {isMusicEnabled ? 'Mute' : 'Enable'}
                   </button>
                 </div>
               )}

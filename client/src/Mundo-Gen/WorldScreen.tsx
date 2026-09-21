@@ -42,6 +42,13 @@ const MINIGAME_ROUTES: { [key: string]: string } = {
     RoomMinigame: '/mi cuarto',
 };
 
+const MINIGAME_NAMES: { [key: string]: string } = {
+    FirstMinigame: 'Word Hunt',
+    SecondMinigame: 'Verb Workshop',
+    ThirdMinigame: 'Sweet Sounds',
+    RoomMinigame: 'My Room',
+};
+
 const DIRECTION_MAP: { [key: string]: number } = {
     'arrowup': 0, 'w': 0,
     'arrowdown': 1, 's': 1,
@@ -135,7 +142,7 @@ const WorldScreen: React.FC = () => {
                 
                 if (isCompleted) {
                     setCharacterState(prev => ({ ...prev, isMoving: false }));
-                    const gameName = targetRoute.replace('/', '');
+                    const gameName = MINIGAME_NAMES[isPopupTriggered] || 'mini-game';
                     setCompletedMinigamePopup({ isVisible: true, gameName });
                     setHasShownPopupForTrigger(isPopupTriggered);
                 } else {
@@ -147,7 +154,7 @@ const WorldScreen: React.FC = () => {
                         setHasShownPopupForTrigger(isPopupTriggered);
                     } else {
                         setCharacterState(prev => ({ ...prev, isMoving: false }));
-                        const gameName = targetRoute.replace('/', '');
+                        const gameName = MINIGAME_NAMES[isPopupTriggered] || 'mini-game';
                         setMiniGamePopupState({ isVisible: true, targetRoute, gameName });
                         setHasShownPopupForTrigger(isPopupTriggered);
                     }
@@ -404,7 +411,7 @@ const WorldScreen: React.FC = () => {
                     disabled={showLogoutPopup || !!miniGamePopupState || !!completedMinigamePopup || showAllCompletedPopup}
                 >
                     <LogOutIcon className="w-3 h-3" />
-                    <span className="font-bold">SALIR</span>
+                    <span className="font-bold">LOG OUT</span>
                 </button>
             </div>
 

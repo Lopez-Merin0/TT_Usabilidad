@@ -14,10 +14,10 @@ const SleepPopup: React.FC<SleepPopupProps> = ({ onClose }) => (
                 maxWidth: '450px',
             }}>
             <h2 className="text-2xl font-bold mb-3" style={{ color: '#333333' }}>
-                ¡Listo para un Nuevo Día!
+                Ready for a New Day!
             </h2>
             <p className="text-lg mb-4" style={{ color: '#666666', lineHeight: '1.6' }}>
-                Has completado todas las aventuras de hoy. Es hora de descansar y recargar energías.
+                You have completed all of today's adventures. It is time to rest and recharge.
             </p>
             <p className="text-base mb-6" style={{ 
                 color: '#9370DB', 
@@ -25,7 +25,7 @@ const SleepPopup: React.FC<SleepPopupProps> = ({ onClose }) => (
                 fontSize: '1.1rem',
                 fontStyle: 'italic'
             }}>
-                ¡Próximamente más aventuras!
+                More adventures coming soon!
             </p>
             <button
                 onClick={onClose}
@@ -37,7 +37,7 @@ const SleepPopup: React.FC<SleepPopupProps> = ({ onClose }) => (
                     boxShadow: '5px 5px 0px #8A2BE2',
                 }}
             >
-                Cerrar
+                Close
             </button>
         </div>
     </div>

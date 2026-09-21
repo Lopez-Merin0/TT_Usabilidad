@@ -81,21 +81,21 @@ const CompletionMessage: React.FC<CompletionMessageProps> = ({
                 textAlign: 'center',
             }}>
                 <h2 style={{ ...KAWAI_STYLES.header, fontSize: '1.5rem', marginBottom: '15px' }}>
-                    🎉 ¡Felicidades! 🎉
+                    🎉 Congratulations! 🎉
                 </h2>
                 <p style={{ color: KAWAI_COLORS.textDark, fontSize: '1rem', marginBottom: '10px' }}>
                     {allQuestionsCompleted && !showCompletionMessage
-                        ? 'Ya has completado todos los desafíos.'
-                        : 'Has completado todos los desafíos.'}
+                        ? 'You have already completed all the challenges.'
+                        : 'You have completed all the challenges.'}
                 </p>
                 <p style={{ color: KAWAI_COLORS.textGreen, fontSize: '0.9rem', marginBottom: '20px' }}>
-                    Preguntas completadas: {totalCompleted} de {totalQuestions}
+                    Questions completed: {totalCompleted} of {totalQuestions}
                 </p>
                 <button
                     onClick={onBackToMap}
                     style={nextButtonStyle}
                 >
-                    Volver al Mapa
+                    Return to Map
                 </button>
             </div>
         </div>

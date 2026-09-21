@@ -21,28 +21,28 @@ const RegisterScreen = () => {
     let isValid = true;
 
     if (!username.trim()) {
-      newErrors.username = 'El nombre de usuario no puede estar vacío';
+      newErrors.username = 'Username cannot be empty';
       isValid = false;
     }
 
     if (!email.trim()) {
-      newErrors.email = 'El campo de email no puede estar vacío';
+      newErrors.email = 'Email cannot be empty';
       isValid = false;
     } else if (!/\S+@\S+\.\S+/.test(email)) {
-      newErrors.email = 'El email debe ser una dirección de correo válida';
+      newErrors.email = 'Email must be a valid email address';
       isValid = false;
     }
 
     if (!password) {
-      newErrors.password = 'El campo de contraseña no puede estar vacío';
+      newErrors.password = 'Password cannot be empty';
       isValid = false;
     } else if (password.length < 6) {
-      newErrors.password = 'La contraseña debe tener al menos 6 caracteres';
+      newErrors.password = 'Password must be at least 6 characters long';
       isValid = false;
     }
 
     if (password !== confirmPassword) {
-      newErrors.confirmPassword = 'Las contraseñas no coinciden.';
+      newErrors.confirmPassword = 'Passwords do not match.';
       isValid = false;
     }
 
@@ -65,7 +65,7 @@ const RegisterScreen = () => {
       const result = await registerUser(userData); 
       console.log('Resultado del registro:', result);
       
-      setMessage('¡Registro exitoso! Redirigiendo al inicio de sesión...');
+      setMessage('Registration successful! Redirecting to login...');
       
       setTimeout(() => {
         navigate('/login');
@@ -75,9 +75,9 @@ const RegisterScreen = () => {
       console.error('Error completo en registro:', error);
       
       if (error.message.includes('Failed to fetch') || error.message.includes('ERR_CONNECTION_REFUSED')) {
-        setMessage('No se puede conectar al servidor. Asegúrate de que el backend esté corriendo en http://localhost:5000');
+        setMessage('Unable to connect to the server. Make sure the backend is running at http://localhost:5000');
       } else {
-        const errorMsg = error.message || 'Error desconocido en el registro.';
+        const errorMsg = error.message || 'Unknown registration error.';
         setMessage(errorMsg);
       }
     } finally {
@@ -94,11 +94,11 @@ const RegisterScreen = () => {
     <div className="relative w-full h-screen flex items-center justify-center p-2 sm:p-4">
       <div className="relative z-10 w-full max-w-lg mx-auto p-4 sm:p-6 kawaii-layout-bg text-center">
         <div className="mb-4">
-          <h1 className="kawaii-header text-4xl sm:text-5xl">Únete al Pueblo</h1>
+          <h1 className="kawaii-header text-4xl sm:text-5xl">Join the Town</h1>
         </div>
 
         <div className="kawaii-panel p-4 sm:p-6">
-          <h2 className="text-lg font-bold mb-4 text-[var(--kawaii-text-dark)]">¡Regístrate para aprender!</h2>
+          <h2 className="text-lg font-bold mb-4 text-[var(--kawaii-text-dark)]">Sign up to learn!</h2>
 
           {message && (
             <p
@@ -116,7 +116,7 @@ const RegisterScreen = () => {
               <div>
                 <input
                   type="text"
-                  placeholder="Nombre de usuario"
+                  placeholder="Username"
                   className="kawaii-input w-3/4 mx-auto"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
@@ -127,7 +127,7 @@ const RegisterScreen = () => {
               <div>
                 <input
                   type="email"
-                  placeholder="Correo electrónico"
+                  placeholder="Email address"
                   className="kawaii-input w-3/4 mx-auto"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -138,7 +138,7 @@ const RegisterScreen = () => {
               <div>
                 <input
                   type="password"
-                  placeholder="Contraseña (Mín. 6 caracteres)"
+                  placeholder="Password (min. 6 characters)"
                   className="kawaii-input w-3/4 mx-auto"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
@@ -149,7 +149,7 @@ const RegisterScreen = () => {
               <div>
                 <input
                   type="password"
-                  placeholder="Confirmar contraseña"
+                  placeholder="Confirm password"
                   className="kawaii-input w-3/4 mx-auto"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
@@ -159,19 +159,19 @@ const RegisterScreen = () => {
             </div>
 
             <button type="submit" className="kawaii-button w-full text-base py-2" disabled={loading}>
-              {loading ? 'Cargando...' : 'Registrarse'}
+              {loading ? 'Loading...' : 'Sign Up'}
             </button>
           </form>
 
           <div className="flex justify-center items-center space-x-4 mt-4">
             <button onClick={() => navigate('/login')} className="kawaii-link-button text-sm">
-              ¿Ya tienes cuenta? <br />
-              Inicia Sesión
+              Already have an account? <br />
+              Log In
             </button>
 
             <button onClick={() => navigate('/')} className="kawaii-link-button text-sm">
-              Volver a la <br />
-              Pantalla principal
+              Back to the <br />
+              Home screen
             </button>
           </div>
         </div>

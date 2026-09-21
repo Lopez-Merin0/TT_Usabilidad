@@ -15,7 +15,7 @@ const ConfirmationPopup: React.FC<ConfirmationPopupProps> = ({ onConfirm, onCanc
                 maxWidth: '400px',
             }}>
             <p className="text-xl font-bold mb-4" style={{ color: '#333333' }}>
-                ¿Estás seguro de que quieres salir?
+                Are you sure you want to leave?
             </p>
             <div className="flex justify-center space-x-4">
                 <button
@@ -27,7 +27,7 @@ const ConfirmationPopup: React.FC<ConfirmationPopupProps> = ({ onConfirm, onCanc
                         border: '3px solid #e04e9e',
                     }}
                 >
-                    Confirmar
+                    Confirm
                 </button>
                 <button
                     onClick={onCancel}
@@ -38,7 +38,7 @@ const ConfirmationPopup: React.FC<ConfirmationPopupProps> = ({ onConfirm, onCanc
                         border: '3px solid #6495ed',
                     }}
                 >
-                    Cancelar
+                    Cancel
                 </button>
             </div>
         </div>

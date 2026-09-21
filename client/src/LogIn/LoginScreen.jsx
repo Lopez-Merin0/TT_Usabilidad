@@ -79,18 +79,18 @@ const LoginScreen = () => {
         let isValid = true;
 
         if (!email.trim()) {
-            newErrors.email = 'El campo de email no puede estar vacío'; // IsNotEmpty
+            newErrors.email = 'Email cannot be empty'; // IsNotEmpty
             isValid = false;
         } else if (!/\S+@\S+\.\S+/.test(email)) {
-            newErrors.email = 'El campo de email debe ser una dirección de correo válida'; // IsEmail
+            newErrors.email = 'Email must be a valid email address'; // IsEmail
             isValid = false;
         }
 
         if (!password) {
-            newErrors.password = 'El campo de contraseña no puede estar vacío'; // IsNotEmpty
+            newErrors.password = 'Password cannot be empty'; // IsNotEmpty
             isValid = false;
         } else if (password.length < 6) {
-            newErrors.password = 'La contraseña debe tener al menos 6 caracteres'; // MinLength(6)
+            newErrors.password = 'Password must be at least 6 characters long'; // MinLength(6)
             isValid = false;
         }
         
@@ -115,11 +115,11 @@ const LoginScreen = () => {
             console.log('Resultado completo del login:', result);
             
             const responseData = result.data || result;
-            const tokenToSave = responseData.access_token || responseData.token || result.access_token || result.token;
+            const tokenToSave = responseData.access_token || responseData.accessToken || responseData.token;
             console.log('Token extraído:', tokenToSave);
             
             const userData = responseData.user || responseData.data || result.user || {
-                id: responseData.userId || responseData.id,
+                id: responseData.userId || responseData.id || responseData.sub,
                 email: responseData.email || email,
                 username: responseData.username
             };
@@ -132,16 +132,14 @@ const LoginScreen = () => {
                 const savedUserData = localStorage.getItem('userData');
                 
                 if (!savedToken || !savedUserData) {
-                    throw new Error('Error al guardar los datos de autenticación');
+                    throw new Error('Error saving authentication data');
                 }
 
                 await loadUserProgress(userData.id || userData._id, tokenToSave);
                 sessionStorage.removeItem('progressLoaded');
-                setMessage('¡Inicio de sesión exitoso! Bienvenido a tu hogar...');
+                setMessage('Log in successful! Welcome home...');
                 
-                setTimeout(() => {
-                    navigate('/room');
-                }, 500);
+                navigate('/room', { replace: true });
                 
             } else {
                 console.error('Datos incompletos del servidor:', { tokenToSave, userData });
@@ -152,9 +150,9 @@ const LoginScreen = () => {
             console.error('Error completo en login:', error);
             
             if (error.message.includes('Failed to fetch') || error.message.includes('ERR_CONNECTION_REFUSED')) {
-                setMessage('No se puede conectar al servidor. Asegúrate de que el backend esté corriendo en http://localhost:5000');
+                setMessage('Unable to connect to the server. Make sure the backend is running at http://localhost:5000');
             } else {
-                const errorMsg = error.message || 'Error desconocido en el inicio de sesión.';
+                const errorMsg = error.message || 'Unknown login error.';
                 setMessage(errorMsg);
             }
         } finally {
@@ -167,15 +165,15 @@ const LoginScreen = () => {
             <div className="relative z-10 w-full max-w-lg mx-auto p-4 sm:p-6 kawaii-layout-bg text-center">
                 
                 <div className="mb-4">
-                    <h1 className="kawaii-header text-4xl sm:text-5xl">Iniciar Sesión</h1>
+                    <h1 className="kawaii-header text-4xl sm:text-5xl">Log In</h1>
                 </div>
 
                 <div className="kawaii-panel p-4 sm:p-6">
-                    <h2 className="text-lg font-bold mb-4 text-[var(--kawaii-text-dark)]">Bienvenido de vuelta</h2>
+                    <h2 className="text-lg font-bold mb-4 text-[var(--kawaii-text-dark)]">Welcome back</h2>
 
                     {message && (
                         <p className={`mb-4 text-sm font-semibold p-2 rounded-xl transition duration-300 border 
-                            ${message.toLowerCase().includes('exitoso') 
+                            ${message.toLowerCase().includes('successful') 
                                 ? 'bg-green-100 border-green-600 text-green-800'
                                 : 'bg-red-100 border-red-600 text-red-800'
                             }`}
@@ -190,7 +188,7 @@ const LoginScreen = () => {
                             <div>
                                 <input
                                     type="email"
-                                    placeholder="Correo electrónico"
+                                    placeholder="Email address"
                                     className="kawaii-input w-3/4 mx-auto"
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
@@ -201,7 +199,7 @@ const LoginScreen = () => {
                             <div>
                                 <input
                                     type="password"
-                                    placeholder="Contraseña"
+                                    placeholder="Password"
                                     className="kawaii-input w-3/4 mx-auto"
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
@@ -212,7 +210,7 @@ const LoginScreen = () => {
                         </div>
                         
                         <button type="submit" className="kawaii-button w-full text-base py-2" disabled={loading}>
-                            {loading ? 'Cargando...' : 'Iniciar Sesión'}
+                            {loading ? 'Loading...' : 'Log In'}
                         </button>
                     </form>
 
@@ -221,15 +219,15 @@ const LoginScreen = () => {
                             onClick={() => navigate('/register')} 
                             className="kawaii-link-button text-sm"
                         >
-                            ¿No tienes cuenta? <br />
-                            Regístrate aquí
+                            Don't have an account? <br />
+                            Sign up here
                         </button>
                         <button 
                             onClick={() => navigate('/')} 
                             className="kawaii-link-button text-sm"
                         >
-                            Volver a la <br />
-                            Pantalla principal
+                            Back to the <br />
+                            Home screen
                         </button>
                     </div>
                 </div>

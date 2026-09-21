@@ -14,13 +14,13 @@ const AllMinigamesCompletedPopup: React.FC<AllMinigamesCompletedPopupProps> = ({
                 maxWidth: '500px',
             }}>
             <h2 className="text-2xl font-bold mb-3" style={{ color: '#333333' }}>
-                ¡Felicitaciones!
+                Congratulations!
             </h2>
             <p className="text-lg mb-4" style={{ color: '#666666', lineHeight: '1.6' }}>
-                Has completado <strong>los tres minijuegos</strong> exitosamente.
+                You have successfully completed <strong>all three mini-games</strong>.
             </p>
             <p className="text-base mb-6" style={{ color: '#666666', lineHeight: '1.6' }}>
-                Es hora de regresar a casa para descansar y empezar un nuevo día lleno de aventuras. 🏠💤
+                It is time to go home, rest, and start a new day full of adventures. 🏠💤
             </p>
             <button
                 onClick={onGoToRoom}
@@ -32,7 +32,7 @@ const AllMinigamesCompletedPopup: React.FC<AllMinigamesCompletedPopupProps> = ({
                     boxShadow: '5px 5px 0px #FFA500',
                 }}
             >
-                Ir a Casa 
+                Go Home
             </button>
         </div>
     </div>

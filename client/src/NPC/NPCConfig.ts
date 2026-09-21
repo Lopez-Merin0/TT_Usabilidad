@@ -40,15 +40,15 @@ export const NPC_LIST: NPCData[] = [
         y: 585,
         dialogues: [
             {
-                text: 'Tip del día: cambia tu celular al idioma que estás aprendiendo. Tu cerebro hará flexiones sin que te des cuenta.',
+                text: 'Tip of the day: change your phone to the language you are learning. Your brain will do mental push-ups without you noticing.',
                 image: dialogueNpc1
             },
             {
-                text: 'Practica verbos haciendo pequeñas frases sobre tu día. Es como calentar antes de un partido.',
+                text: 'Practice verbs by making short sentences about your day. It is like warming up before a game.',
                 image: dialogueNpc1
             },
             {
-                text: 'Escucha 5 minutos de audio en el idioma cada mañana. Es café para tu cerebro.',
+                text: 'Listen to five minutes of audio in the language every morning. It is coffee for your brain.',
                 image: dialogueNpc1
             }
         ]
@@ -61,11 +61,11 @@ export const NPC_LIST: NPCData[] = [
         y: 350,
         dialogues: [
             {
-                text: 'Juega mini juegos para repasar vocabulario. Tu mente aprende más cuando se divierte.',
+                text: 'Play mini-games to review vocabulary. Your mind learns more when it is having fun.',
                 image: dialogueNpc2
             },
             {
-                text: 'Pronuncia en voz alta lo que aprendas. Aunque suene raro, sirve muchísimo.',
+                text: 'Say out loud what you learn. Even if it sounds strange, it helps a lot.',
                 image: dialogueNpc2
             }
         ]
@@ -78,15 +78,15 @@ export const NPC_LIST: NPCData[] = [
         y: 930,
         dialogues: [
             {
-                text: 'Repite frases cortas varias veces al día. La repetición es tu superpoder.',
+                text: 'Repeat short phrases several times a day. Repetition is your superpower.',
                 image: dialogueNpc3
             },
             {
-                text: 'Cuando no entiendas algo, ¡no te frenes! Adivinar por contexto también es aprender.',
+                text: 'When you do not understand something, do not stop! Guessing from context is also learning.',
                 image: dialogueNpc3
             },
             {
-                text: 'Dedica 10 minutos diarios. No necesitas más para volverte peligrosamente buena.',
+                text: 'Spend 10 minutes a day practicing. You do not need more to become impressively good.',
                 image: dialogueNpc3
             }
         ]
@@ -99,15 +99,15 @@ export const NPC_LIST: NPCData[] = [
         y: 400,
         dialogues: [
             {
-                text: 'Lee en voz alta todos los días. Tu pronunciación mejorará sin que te des cuenta.',
+                text: 'Read aloud every day. Your pronunciation will improve before you even notice.',
                 image: dialogueNpc4
             },
             {
-                text: 'No tengas miedo de cometer errores. Cada error es una lección disfrazada.',
+                text: 'Do not be afraid to make mistakes. Every mistake is a lesson in disguise.',
                 image: dialogueNpc4
             },
             {
-                text: 'Escribe un diario en el idioma que aprendes. Documenta tu progreso y tus pensamientos.',
+                text: 'Keep a diary in the language you are learning. Document your progress and thoughts.',
                 image: dialogueNpc4
             }
         ]
@@ -120,15 +120,15 @@ export const NPC_LIST: NPCData[] = [
         y: 650,
         dialogues: [
             {
-                text: 'Usa tarjetas de memoria para vocabulario nuevo. La repetición espaciada es clave.',
+                text: 'Use flashcards for new vocabulary. Spaced repetition is key.',
                 image: dialogueNpc5
             },
             {
-                text: 'Intenta pensar en el idioma que estudias. Cambia el idioma de tus pensamientos internos.',
+                text: 'Try to think in the language you are studying. Change the language of your inner thoughts.',
                 image: dialogueNpc5
             },
             {
-                text: 'Celebra tus pequeños logros. Cada palabra nueva es una victoria que merece reconocimiento.',
+                text: 'Celebrate your small achievements. Every new word is a victory worth recognizing.',
                 image: dialogueNpc5
             }
         ]

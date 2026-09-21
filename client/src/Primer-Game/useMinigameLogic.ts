@@ -188,18 +188,18 @@ export const useMinigameLogic = (userName: string) => {
         const isLastDialog = currentDialogIndex >= totalDialogs - 1;
 
         if (showStory) {
-            return isLastDialog ? "¡Empecemos el Desafío!" : "Continuar";
+            return isLastDialog ? "Let's start the challenge!" : "Continue";
         } else if (isAnswered) {
             if (isCorrectAnswer) {
                 if (currentQuestionIndex < MINIGAME_QUESTIONS.length - 1) {
-                    return "Siguiente Pregunta";
+                    return "Next Question";
                 } else {
-                    return "¡Completado! Cerrar";
+                    return "Completed! Close";
                 }
             } else if (attempts < 2) {
-                return "Siguiente Intento";
+                return "Next Attempt";
             } else {
-                return "Cerrar y Salir";
+                return "Close and Exit";
             }
         }
         return '...';

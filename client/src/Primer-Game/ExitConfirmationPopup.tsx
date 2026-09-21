@@ -19,10 +19,10 @@ const ExitConfirmationPopup: React.FC<ExitConfirmationPopupProps> = ({ onConfirm
             }}>
 
             <p className="text-xl font-bold mb-5" style={{ color: KAWAI_COLORS.textDark }}>
-                ¿Estás segura de regresar al mapa?
+                Are you sure you want to return to the map?
             </p>
             <p className="text-sm mb-6" style={{ color: KAWAI_COLORS.textDark }}>
-                Perderás el progreso de tu partida actual.
+                You will lose the progress of your current game.
             </p>
 
             <div className="flex justify-center space-x-4">
@@ -39,7 +39,7 @@ const ExitConfirmationPopup: React.FC<ExitConfirmationPopupProps> = ({ onConfirm
                         fontFamily: KAWAI_FONTS.mali,
                     }}
                 >
-                    Confirmar
+                    Confirm
                 </button>
                 <button
                     onClick={onCancel}
@@ -54,7 +54,7 @@ const ExitConfirmationPopup: React.FC<ExitConfirmationPopupProps> = ({ onConfirm
                         fontFamily: KAWAI_FONTS.mali,
                     }}
                 >
-                    Cancelar
+                    Cancel
                 </button>
             </div>
         </div>

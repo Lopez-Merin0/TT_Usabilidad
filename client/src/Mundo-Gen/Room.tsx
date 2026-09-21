@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 
 import Character from './Character';
 import LoadingScreen from '../LogIn/LoadingScreen';
-import { useGlobalProgress } from '../contexts/GlobalProgressContext';
 import SleepPopup from '../components/Popups/SleepPopup';
 import { checkRoomCollision } from '../utils/collisionUtils';
 import { checkAllMinigamesCompleted } from '../utils/minigameUtils';
@@ -49,11 +48,8 @@ const LogOutIcon = (props: React.SVGProps<SVGSVGElement>) => (
 
 const Room: React.FC = () => {
     const navigate = useNavigate();
-    const { saveProgressToServer } = useGlobalProgress();
     const [showLogoutPopup, setShowLogoutPopup] = useState(false);
     const [showMapPopup, setShowMapPopup] = useState(false);
-    const [showSavePopup, setShowSavePopup] = useState(false);
-    const [hasShownSavePopup, setHasShownSavePopup] = useState(false);
     const [showSleepPopup, setShowSleepPopup] = useState(false);
     const [hasShownSleepPopup, setHasShownSleepPopup] = useState(false);
     const [showIntro, setShowIntro] = useState(true);
@@ -96,7 +92,7 @@ const Room: React.FC = () => {
 
     const handleKeyDown = useCallback((event: KeyboardEvent) => {
         // Bloquear movimiento si hay algún popup activo
-        if (showSavePopup || showLogoutPopup || showSleepPopup || showMapPopup) {
+        if (showLogoutPopup || showSleepPopup || showMapPopup) {
             event.preventDefault();
             return;
         }
@@ -156,11 +152,11 @@ const Room: React.FC = () => {
                 isMoving: true,
             };
         });
-    }, [MAX_MAP_WIDTH, MAX_MAP_HEIGHT, showSavePopup, showLogoutPopup, showSleepPopup, showMapPopup]);
+    }, [MAX_MAP_WIDTH, MAX_MAP_HEIGHT, showLogoutPopup, showSleepPopup, showMapPopup]);
 
     const handleKeyUp = useCallback((event: KeyboardEvent) => {
         // Bloquear movimiento si hay algún popup activo
-        if (showSavePopup || showLogoutPopup || showSleepPopup || showMapPopup) {
+        if (showLogoutPopup || showSleepPopup || showMapPopup) {
             event.preventDefault();
             return;
         }
@@ -169,14 +165,14 @@ const Room: React.FC = () => {
         if (DIRECTION_MAP[key] !== undefined) {
             setCharacterState((prev) => ({ ...prev, isMoving: false }));
         }
-    }, [showSavePopup, showLogoutPopup, showSleepPopup, showMapPopup]);
+    }, [showLogoutPopup, showSleepPopup, showMapPopup]);
 
     useEffect(() => {
         // Detener movimiento cuando aparezca un popup
-        if (showSavePopup || showLogoutPopup || showSleepPopup || showMapPopup) {
+        if (showLogoutPopup || showSleepPopup || showMapPopup) {
             setCharacterState(prev => ({ ...prev, isMoving: false, frame: 0 }));
         }
-    }, [showSavePopup, showLogoutPopup, showSleepPopup, showMapPopup]);
+    }, [showLogoutPopup, showSleepPopup, showMapPopup]);
 
     useEffect(() => {
         window.addEventListener('keydown', handleKeyDown);
@@ -192,17 +188,6 @@ const Room: React.FC = () => {
         
         console.log('🔍 Verificando zonas - Posición:', { mapX, mapY });
         
-        // Zona de guardado
-        const isInSaveZone = mapX >= 500 && mapX <= 620 && mapY >= 280 && mapY <= 320;
-        
-        if (isInSaveZone && !showSavePopup && !hasShownSavePopup) {
-            console.log('💾 Zona de guardado activada');
-            setShowSavePopup(true);
-            setHasShownSavePopup(true);
-        } else if (!isInSaveZone && hasShownSavePopup) {
-            setHasShownSavePopup(false);
-        }
-
         // Zona de la cama (dormir) - ÁREA ALREDEDOR de la cama, no sobre ella
         const isNearBed = (
             (mapX >= 50 && mapX <= 100 && mapY >= 280 && mapY <= 375) ||  // Lado izquierdo de la cama
@@ -227,21 +212,7 @@ const Room: React.FC = () => {
         } else if (!isNearBed && hasShownSleepPopup) {
             setHasShownSleepPopup(false);
         }
-    }, [characterState.mapX, characterState.mapY, showSavePopup, hasShownSavePopup, showSleepPopup, hasShownSleepPopup]);
-
-    const handleSaveProgress = async () => {
-        console.log('=== Iniciando guardado de progreso ===');
-        
-        const success = await saveProgressToServer();
-        
-        if (success) {
-            alert('¡Progreso guardado exitosamente en la base de datos!');
-            setShowSavePopup(false);
-        } else {
-            alert('No se pudo guardar el progreso. Asegúrate de haber completado al menos un nivel.');
-            setShowSavePopup(false);
-        }
-    };
+    }, [characterState.mapX, characterState.mapY, showSleepPopup, hasShownSleepPopup]);
 
     if (showIntro) {
         return <LoadingScreen onAnimationEnd={() => setShowIntro(false)} />;
@@ -290,34 +261,6 @@ const Room: React.FC = () => {
                         />
                     ))}
                     
-                    {/* Zona de guardado en verde */}
-                    <div
-                        style={{
-                            position: 'absolute',
-                            left: '500px',
-                            top: '280px',
-                            width: '120px',
-                            height: '40px',
-                            border: '3px solid green',
-                            backgroundColor: 'rgba(0, 255, 0, 0.2)',
-                            pointerEvents: 'none',
-                        }}
-                    >
-                        <div style={{
-                            position: 'absolute',
-                            top: '5px',
-                            left: '5px',
-                            backgroundColor: 'rgba(0, 0, 0, 0.7)',
-                            color: 'lime',
-                            padding: '2px 5px',
-                            borderRadius: '3px',
-                            fontSize: '10px',
-                            fontWeight: 'bold',
-                        }}>
-                            Guardar
-                        </div>
-                    </div>
-
                     {/* Zona de dormir en morado - ALREDEDOR de la cama */}
                     {checkAllMinigamesCompleted() && (
                         <>
@@ -360,13 +303,13 @@ const Room: React.FC = () => {
                         border: '3px solid #32CD32',
                         fontSize: '0.75rem',
                     }}
-                    disabled={showLogoutPopup || showSavePopup || showSleepPopup || showMapPopup}
+                    disabled={showLogoutPopup || showSleepPopup || showMapPopup}
                 >
-                    <span className="font-bold">IR AL MAPA</span>
+                    <span className="font-bold">GO TO MAP</span>
                 </button>
 
                 <ProgressButton
-                    disabled={showLogoutPopup || showSavePopup || showSleepPopup || showMapPopup}
+                    disabled={showLogoutPopup || showSleepPopup || showMapPopup}
                 />
 
                 <button
@@ -378,10 +321,10 @@ const Room: React.FC = () => {
                         border: '3px solid #e04e9e',
                         fontSize: '0.75rem',
                     }}
-                    disabled={showLogoutPopup || showSavePopup || showSleepPopup || showMapPopup}
+                    disabled={showLogoutPopup || showSleepPopup || showMapPopup}
                 >
                     <LogOutIcon className="w-3 h-3" />
-                    <span className="font-bold">SALIR</span>
+                    <span className="font-bold">LOG OUT</span>
                 </button>
             </div>
 
@@ -395,7 +338,7 @@ const Room: React.FC = () => {
                             maxWidth: '400px',
                         }}>
                         <p className="text-xl font-bold mb-4" style={{ color: '#333333' }}>
-                            ¿Quieres ir al mapa?
+                            Do you want to go to the map?
                         </p>
                         <div className="flex justify-center space-x-4">
                             <button
@@ -410,7 +353,7 @@ const Room: React.FC = () => {
                                     border: '3px solid #32CD32',
                                 }}
                             >
-                                Aceptar
+                                Accept
                             </button>
                             <button
                                 onClick={() => setShowMapPopup(false)}
@@ -421,7 +364,7 @@ const Room: React.FC = () => {
                                     border: '3px solid #6495ed',
                                 }}
                             >
-                                Cancelar
+                                Cancel
                             </button>
                         </div>
                     </div>
@@ -438,46 +381,6 @@ const Room: React.FC = () => {
                     }} 
                     onCancel={() => setShowLogoutPopup(false)} 
                 />
-            )}
-
-            {showSavePopup && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                    <div className="kawaii-popup p-6 rounded-lg shadow-lg text-center"
-                        style={{
-                            backgroundColor: '#fefefe',
-                            border: '5px solid #6495ed',
-                            boxShadow: '0 8px 0 0 #add8e6',
-                            maxWidth: '400px',
-                        }}>
-                        <p className="text-xl font-bold mb-4" style={{ color: '#333333' }}>
-                            ¿Quieres guardar tu progreso?
-                        </p>
-                        <div className="flex justify-center space-x-4">
-                            <button
-                                onClick={handleSaveProgress}
-                                className="kawaii-button py-2 px-4 font-bold"
-                                style={{
-                                    backgroundColor: '#90EE90',
-                                    color: '#333333',
-                                    border: '3px solid #32CD32',
-                                }}
-                            >
-                                Guardar
-                            </button>
-                            <button
-                                onClick={() => setShowSavePopup(false)}
-                                className="kawaii-button py-2 px-4 font-bold"
-                                style={{
-                                    backgroundColor: '#add8e6',
-                                    color: '#333333',
-                                    border: '3px solid #6495ed',
-                                }}
-                            >
-                                Cancelar
-                            </button>
-                        </div>
-                    </div>
-                </div>
             )}
 
             {showSleepPopup && (

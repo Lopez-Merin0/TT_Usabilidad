@@ -34,6 +34,12 @@ export const useMinigameLogic = (userName: string, audioRef?: React.RefObject<HT
     const allQuestionsCompleted = progress.totalCompleted >= MINIGAME_3_QUESTIONS.length;
 
     useEffect(() => {
+        if (!allQuestionsCompleted && currentQuestionIndex >= MINIGAME_3_QUESTIONS.length) {
+            resetQuestionIndex();
+        }
+    }, [allQuestionsCompleted, currentQuestionIndex, resetQuestionIndex]);
+
+    useEffect(() => {
         if (isCurrentQuestionCompleted && currentQuestionIndex < MINIGAME_3_QUESTIONS.length - 1 && !isAnswered) {
             console.log('Pregunta ya completada, avanzando automáticamente...');
             moveToNextQuestion();
@@ -183,18 +189,18 @@ export const useMinigameLogic = (userName: string, audioRef?: React.RefObject<HT
         const isLastDialog = currentDialogIndex >= totalDialogs - 1;
 
         if (showStory) {
-            return isLastDialog ? "¡Empecemos el Desafío!" : "Continuar";
+            return isLastDialog ? "Let's start the challenge!" : "Continue";
         } else if (isAnswered) {
             if (isCorrectAnswer) {
                 if (currentQuestionIndex < MINIGAME_3_QUESTIONS.length - 1) {
-                    return "Siguiente Pregunta";
+                    return "Next Question";
                 } else {
-                    return "¡Completado! Cerrar";
+                    return "Completed! Close";
                 }
             } else if (attempts < 2) {
-                return "Siguiente Intento";
+                return "Next Attempt";
             } else {
-                return "Cerrar y Salir";
+                return "Close and Exit";
             }
         }
         return '...';

@@ -27,96 +27,96 @@ export interface MinigameQuestion {
 export const MINIGAME_2_QUESTIONS: MinigameQuestion[] = [
     {
         id: 1,
-        sentence: 'Ella {gap} jugando fútbol.',
-        rules: 'Completa la frase seleccionando la forma correcta del verbo "estar".',
+        sentence: 'She {gap} playing soccer.',
+        rules: 'Complete the sentence by selecting the correct form of the verb "to be".',
 
         options: [
             {
-                id: 1,
-                text: 'está',
-                isCorrect: true,
-            },
-            {
                 id: 2,
-                text: 'están',
+                text: 'are',
                 isCorrect: false,
             },
             {
                 id: 3,
-                text: 'estoy',
+                text: 'am',
                 isCorrect: false,
             },
             {
                 id: 4,
-                text: 'estar',
+                text: 'be',
                 isCorrect: false,
+            },
+            {
+                id: 1,
+                text: 'is',
+                isCorrect: true,
             },
         ],
 
         dialogue: {
-            introTitle: '🎁 ¡Bienvenido al Rincón Gramatical!',
+            introTitle: '🎁 Welcome to Verb Workshop!',
 
             introGreeting: [
-                '¡Hola! Qué bueno verte por aquí.',
-                'Soy Cristi. Un cliente dejó una nota con una pequeña misión:',
-                'Quiere comprobar si dominamos las formas del verbo "estar". ¿Aceptas el desafío?',
-                'Tu misión: Completa correctamente la frase seleccionando la forma adecuada de "estar". ¡Vamos a darle!',
+                'Hello! It is great to see you here.',
+                'I am Cristi. A customer left a note with a small mission:',
+                'They want to see if we know the forms of the verb "to be". Do you accept the challenge?',
+                'Your mission: complete the sentence by selecting the correct form of "to be". Let us do this!',
             ],
 
-            correctFeedback: '¡Perfecto! La forma correcta es "{text}". "Ella está jugando fútbol" suena impecable. ¡Buen trabajo!',
-            wrongAttempt1: 'Casi, casi. Recuerda que "Ella" es singular. ¿Qué forma del verbo "estar" corresponde? Te queda un intento.',
-            wrongAttempt2: 'No pasa nada. ¡A seguir sumando experiencia!',
+            correctFeedback: 'Perfect! The correct form is "{text}". "She is playing soccer" sounds excellent. Great job!',
+            wrongAttempt1: 'Almost. Remember that "she" is singular. Which form of "to be" belongs here? You have one attempt left.',
+            wrongAttempt2: 'That is okay. Keep gaining experience!',
 
-            instruction: 'Selecciona la forma correcta del verbo "estar" para completar la frase.',
-            questionHeader: 'El desafío es: ',
+            instruction: 'Select the correct form of the verb "to be" to complete the sentence.',
+            questionHeader: 'The challenge is: ',
         }
     },
     {
         id: 2,
-        sentence: 'Nosotros {gap} listos para empezar.',
-        rules: 'Completa la frase seleccionando la forma correcta del verbo "estar" en plural.',
+        sentence: 'We {gap} ready to start.',
+        rules: 'Complete the sentence by selecting the correct plural form of the verb "to be".',
 
         options: [
             {
-                id: 1,
-                text: 'estamos',
-                isCorrect: true,
-            },
-            {
                 id: 2,
-                text: 'están',
+                text: 'is',
                 isCorrect: false,
             },
             {
                 id: 3,
-                text: 'estoy',
+                text: 'am',
                 isCorrect: false,
             },
             {
                 id: 4,
-                text: 'estás',
+                text: 'be',
                 isCorrect: false,
+            },
+            {
+                id: 1,
+                text: 'are',
+                isCorrect: true,
             },
         ],
 
         dialogue: {
-            introTitle: '🚀 ¡Hora del Nivel 2!',
+            introTitle: '🚀 Time for Level 2!',
             introGreeting: [
-                '¡Ey! Veo que regresaste con toda la actitud.',
-                'Cristi encontró otra nota misteriosa… al parecer alguien quiere retarnos otra vez.',
-                'Esta vez toca usar la forma correcta del verbo "estar" en plural. Fácil, ¿no?',
-                'Demuestra tu poder lingüístico.',
+                'Hey! I see you came back with great energy.',
+                'Cristi found another mysterious note. It seems someone wants to challenge us again.',
+                'This time, use the correct plural form of the verb "to be". Easy, right?',
+                'Show your language skills.',
             ],
 
             correctFeedback:
-                '¡Esooo! "{text}" es la forma correcta. "Nosotros estamos listos" suena perfecto. ¡Vas volando!',
+                'That is it! "{text}" is the correct form. "We are ready" sounds perfect. You are flying!',
             wrongAttempt1:
-                'Uy, cerquita pero no. Recuerda que "Nosotros" es primera persona del plural. Te queda un intento, ¡tú puedes!',
+                'So close, but not quite. Remember that "we" is first-person plural. You have one attempt left. You can do it!',
             wrongAttempt2:
-                'No pasa nada.¡Seguimos!',
+                'That is okay. Keep going!',
 
-            instruction: 'Selecciona la forma correcta del verbo "estar".',
-            questionHeader: 'Completa la frase:',
+            instruction: 'Select the correct form of the verb "to be".',
+            questionHeader: 'Complete the sentence:',
         },
     }
 ];

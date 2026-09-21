@@ -21,7 +21,7 @@ const ProgressButton: React.FC<ProgressButtonProps> = ({ disabled = false }) => 
                 }}
                 disabled={disabled}
             >
-                <span className="font-bold">PROGRESO</span>
+                <span className="font-bold">PROGRESS</span>
             </button>
 
             {showProgressMap && <ProgressMap onClose={() => setShowProgressMap(false)} />}

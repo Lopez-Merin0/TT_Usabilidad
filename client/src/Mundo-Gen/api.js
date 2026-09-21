@@ -36,7 +36,7 @@ export const loginUser = async (credentials) => {
         const data = await response.json();
 
         if (!response.ok) {
-            throw new Error(data.message || 'Error en el inicio de sesión');
+            throw new Error(data.message || 'Login error');
         }
 
         return data;

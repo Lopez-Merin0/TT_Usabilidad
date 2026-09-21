@@ -49,12 +49,23 @@ const ThirdMinigame: React.FC<ThirdMinigameProps> = ({ userName }) => {
         getButtonText,
     } = useMinigameLogic(userName, audioRef);
 
-    if (!currentQuestion) return null;
+    const isIntroArray = currentQuestion && Array.isArray(currentQuestion.dialogue.introGreeting);
+    const isLastDialog = currentQuestion
+        ? currentDialogIndex >= (isIntroArray ? currentQuestion.dialogue.introGreeting.length - 1 : 0)
+        : false;
 
-    const { audioUrl, options, rules, dialogue } = currentQuestion;
-
-    const isIntroArray = Array.isArray(dialogue.introGreeting);
-    const isLastDialog = currentDialogIndex >= (isIntroArray ? dialogue.introGreeting.length - 1 : 0);
+    const audioUrl = currentQuestion?.audioUrl ?? '';
+    const options = currentQuestion?.options ?? [];
+    const rules = currentQuestion?.rules ?? '';
+    const dialogue = currentQuestion?.dialogue ?? {
+        introTitle: '',
+        introGreeting: '',
+        correctFeedback: '',
+        wrongAttempt1: '',
+        wrongAttempt2: '',
+        instruction: '',
+        questionHeader: '',
+    };
 
     const handlePlayAudio = () => {
         if (audioRef.current) {
@@ -176,13 +187,13 @@ const ThirdMinigame: React.FC<ThirdMinigameProps> = ({ userName }) => {
                 {isLastDialog && (
                     <>
                         <br /><br />
-                        Reglas: {rules} <br />
-                        Bonus: Tienes 2 oportunidades para adivinar.
+                        Rules: {rules} <br />
+                        Bonus: You have 2 chances to guess.
                     </>
                 )}
             </p>
             <p style={{ marginTop: '5px', fontSize: '0.75rem', color: KAWAI_COLORS.textDark }}>
-                Presiona {buttonText.replace(/\*\*/g, '')} para seguir la conversación.
+                Press {buttonText.replace(/\*\*/g, '')} to continue the conversation.
             </p>
         </>
     );
@@ -237,7 +248,7 @@ const ThirdMinigame: React.FC<ThirdMinigameProps> = ({ userName }) => {
                 color: KAWAI_COLORS.textDark,
                 margin: 0,
             }}>
-                ¡Este es tu intento {attempts + 1} de 2!
+                This is attempt {attempts + 1} of 2!
             </p>
         </>
     );
@@ -260,6 +271,10 @@ const ThirdMinigame: React.FC<ThirdMinigameProps> = ({ userName }) => {
         );
     }
 
+    if (!currentQuestion) {
+        return <LoadingScreen onAnimationEnd={() => undefined} />;
+    }
+
     return (
         <>
             <audio
@@ -279,7 +294,7 @@ const ThirdMinigame: React.FC<ThirdMinigameProps> = ({ userName }) => {
                     disabled={showExitConfirmation}
                     style={logoutButtonStyle}
                 >
-                    Regresar al Mapa
+                    Return to Map
                 </button>
 
                 <div style={{
@@ -294,7 +309,7 @@ const ThirdMinigame: React.FC<ThirdMinigameProps> = ({ userName }) => {
                     fontSize: '0.9rem',
                     zIndex: 20,
                 }}>
-                    Pregunta {currentQuestionIndex + 1} de {MINIGAME_3_QUESTIONS.length}
+                    Question {currentQuestionIndex + 1} of {MINIGAME_3_QUESTIONS.length}
                 </div>
 
                 {!showStory && (

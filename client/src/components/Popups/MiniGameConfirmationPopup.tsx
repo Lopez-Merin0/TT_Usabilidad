@@ -16,7 +16,7 @@ const MiniGameConfirmationPopup: React.FC<MiniGameConfirmationPopupProps> = ({ m
                 maxWidth: '400px',
             }}>
             <p className="text-xl font-bold mb-4" style={{ color: '#333333' }}>
-                ¿Quieres entrar al {minigameName}?
+                Do you want to enter {minigameName}?
             </p>
             <div className="flex justify-center space-x-4">
                 <button
@@ -28,7 +28,7 @@ const MiniGameConfirmationPopup: React.FC<MiniGameConfirmationPopupProps> = ({ m
                         border: '3px solid #e04e9e',
                     }}
                 >
-                    Confirmar
+                    Confirm
                 </button>
                 <button
                     onClick={onCancel}
@@ -39,7 +39,7 @@ const MiniGameConfirmationPopup: React.FC<MiniGameConfirmationPopupProps> = ({ m
                         border: '3px solid #6495ed',
                     }}
                 >
-                    Cancelar
+                    Cancel
                 </button>
             </div>
         </div>

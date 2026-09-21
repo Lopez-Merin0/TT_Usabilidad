@@ -162,7 +162,7 @@ export const GlobalProgressProvider: React.FC<{ children: ReactNode }> = ({ chil
     }, []);
 
     if (isLoading) {
-        return <div>Cargando progreso...</div>;
+        return <div>Loading progress...</div>;
     }
 
     return (

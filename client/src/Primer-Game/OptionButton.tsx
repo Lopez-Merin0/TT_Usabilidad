@@ -80,7 +80,7 @@ const OptionButton: React.FC<OptionButtonProps> = ({
         >
             <img
                 src={option.imagePath}
-                alt={`Opción ${option.id}`}
+                alt={`Option ${option.id}`}
                 style={{
                     width: '80px',
                     height: '80px',

@@ -57,7 +57,7 @@ const NPCDialoguePopup: React.FC<NPCDialoguePopupProps> = ({ npcName, text, imag
                             border: '3px solid #e04e9e',
                         }}
                     >
-                        Cerrar
+                        Close
                     </button>
                 </div>
             </div>

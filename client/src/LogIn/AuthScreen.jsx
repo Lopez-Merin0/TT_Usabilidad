@@ -12,13 +12,13 @@ const AuthScreen = () => {
             Talkie Town!
           </h1>
           <p className="kawaii-subheader text-base">
-            Practica una misión a la vez
+            Practice one mission at a time
           </p>
         </div>
 
         <div className="kawaii-panel p-4 sm:p-6">
           <h2 className="text-lg font-bold mb-4 text-kawaii-text-dark">
-            Acceso al Pueblo
+            Enter the Town
           </h2>
 
           <div className="flex flex-col items-center space-y-3">
@@ -26,20 +26,20 @@ const AuthScreen = () => {
               onClick={() => navigate('/login')} 
               className="kawaii-button max-w-xs w-full text-base py-2"
             >
-              Iniciar Sesión
+              Log In
             </button>
 
             <button 
               onClick={() => navigate('/register')} 
               className="kawaii-button max-w-xs w-full text-base py-2"
             >
-              Registrarse
+              Sign Up
             </button>
           </div>
         </div>
 
         <p className="kawaii-subheader text-sm mt-4">
-          Un pequeño proyecto de estrellitas
+          A little project made of stars
         </p>
 
       </div>

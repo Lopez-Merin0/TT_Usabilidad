@@ -26,7 +26,7 @@ export const checkMinigameUnlocked = (triggerName: string): { unlocked: boolean;
             if (!minigame1Completed) {
                 return { 
                     unlocked: false, 
-                    message: 'Debes completar los 2 niveles del Primer Minijuego para desbloquear este minijuego.' 
+                    message: 'You must complete the 2 levels of the First Mini-Game to unlock this mini-game.'
                 };
             }
             return { unlocked: true, message: '' };
@@ -35,7 +35,7 @@ export const checkMinigameUnlocked = (triggerName: string): { unlocked: boolean;
             if (!minigame1Completed || !minigame2Completed) {
                 return { 
                     unlocked: false, 
-                    message: 'Debes completar los 2 niveles del Segundo Minijuego para desbloquear este minijuego.' 
+                    message: 'You must complete the 2 levels of the Second Mini-Game to unlock this mini-game.'
                 };
             }
             return { unlocked: true, message: '' };

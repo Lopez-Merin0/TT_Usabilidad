@@ -66,10 +66,10 @@ const ProgressMap: React.FC<ProgressMapProps> = ({ onClose }) => {
             >
                 <div className="text-center mb-6">
                     <h1 className="kawaii-header text-4xl mb-2" style={{ color: '#4A3C32', textShadow: '2px 2px 0px rgba(255, 255, 255, 0.5)' }}>
-                        Mapa de Progreso
+                        Progress Map
                     </h1>
                     <p className="text-lg font-bold" style={{ color: '#8B7360' }}>
-                        ¡Completa todos los minijuegos para dominar Talkie Town!
+                        Complete all the mini-games to master Talkie Town!
                     </p>
                 </div>
 
@@ -89,18 +89,18 @@ const ProgressMap: React.FC<ProgressMapProps> = ({ onClose }) => {
                             <div className="mb-2 flex justify-center">
                                 <img 
                                     src={cafeImage} 
-                                    alt="Café" 
+                                    alt="Coffee" 
                                     style={{ width: '60px', height: '60px', objectFit: 'contain' }}
                                 />
                             </div>
                             <h3 className="text-xl font-bold mb-2" style={{ color: '#4A3C32' }}>
-                                El Rincón del Café
+                                Word Hunt
                             </h3>
                             <div className="text-3xl font-bold" style={{ color: '#ff69b4' }}>
                                 {minigame1Completed}/2
                             </div>
                             <p className="text-xs mt-2 font-semibold" style={{ color: '#4A3C32' }}>
-                                {minigame1Completed >= 2 ? '¡Completado! ✓' : 'En progreso...'}
+                                {minigame1Completed >= 2 ? 'Completed! ✓' : 'In progress...'}
                             </p>
                         </div>
                     </div>
@@ -123,18 +123,18 @@ const ProgressMap: React.FC<ProgressMapProps> = ({ onClose }) => {
                             <div className="mb-2 flex justify-center">
                                 <img 
                                     src={gramaticaImage} 
-                                    alt="Gramática" 
+                                    alt="Grammar" 
                                     style={{ width: '60px', height: '60px', objectFit: 'contain' }}
                                 />
                             </div>
                             <h3 className="text-xl font-bold mb-2" style={{ color: '#4A3C32' }}>
-                                El Rincón Gramatical
+                                Verb Workshop
                             </h3>
                             <div className="text-3xl font-bold" style={{ color: '#ff69b4' }}>
                                 {minigame2Completed}/2
                             </div>
                             <p className="text-xs mt-2 font-semibold" style={{ color: '#4A3C32' }}>
-                                {!isMinigame2Unlocked ? 'Bloqueado' : minigame2Completed >= 2 ? '¡Completado! ✓' : 'En progreso...'}
+                                {!isMinigame2Unlocked ? 'Locked' : minigame2Completed >= 2 ? 'Completed! ✓' : 'In progress...'}
                             </p>
                         </div>
                     </div>
@@ -157,18 +157,18 @@ const ProgressMap: React.FC<ProgressMapProps> = ({ onClose }) => {
                             <div className="mb-2 flex justify-center">
                                 <img 
                                     src={carameloImage} 
-                                    alt="Caramelo" 
+                                    alt="Candy" 
                                     style={{ width: '60px', height: '60px', objectFit: 'contain' }}
                                 />
                             </div>
                             <h3 className="text-xl font-bold mb-2" style={{ color: '#4A3C32' }}>
-                                El Rincón del Caramelo
+                                Sweet Sounds
                             </h3>
                             <div className="text-3xl font-bold" style={{ color: '#ff69b4' }}>
                                 {minigame3Completed}/2
                             </div>
                             <p className="text-xs mt-2 font-semibold" style={{ color: '#4A3C32' }}>
-                                {!isMinigame3Unlocked ? 'Bloqueado' : minigame3Completed >= 2 ? '¡Completado! ✓' : 'En progreso...'}
+                                {!isMinigame3Unlocked ? 'Locked' : minigame3Completed >= 2 ? 'Completed! ✓' : 'In progress...'}
                             </p>
                         </div>
                     </div>
@@ -185,7 +185,7 @@ const ProgressMap: React.FC<ProgressMapProps> = ({ onClose }) => {
                             boxShadow: '0 6px 0 0 #e04e9e',
                         }}
                     >
-                        Cerrar Mapa
+                        Close Map
                     </button>
                 </div>
             </div>

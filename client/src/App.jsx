@@ -43,12 +43,12 @@ const App = () => {
     if (userData) {
       try {
         const parsedData = JSON.parse(userData);
-        return parsedData.username || 'Usuario';
+        return parsedData.username || 'Player';
       } catch {
-        return 'Usuario';
+        return 'Player';
       }
     }
-    return 'Usuario';
+    return 'Player';
   };
 
   return (
@@ -76,7 +76,7 @@ const App = () => {
                   cursor: 'pointer',
                   fontSize: '1.2rem'
                 }}
-                title={isMusicEnabled ? "Silenciar Música" : "Activar Música"}
+                title={isMusicEnabled ? "Mute music" : "Enable music"}
               >
                 {isMusicEnabled ? '🔊' : '🔇'}
               </button>

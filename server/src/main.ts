@@ -1,26 +1,21 @@
-// jala NestJS y configura cosas globales como CORS, validación y prefijos de rutas
-
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { ValidationPipe } from '@nestjs/common'; 
+import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  
-  // Habilitar CORS
-  app.enableCors({
-  origin: true,
-  credentials: true,
-});
 
-  // Habilitar validación global
+  app.enableCors({
+    origin: 'https://talkie-town.onrender.com',
+    credentials: true,
+  });
+
   app.useGlobalPipes(new ValidationPipe({
     whitelist: true,
     transform: true,
   }));
 
-  await app.listen(5000);
-  console.log('🚀 Servidor corriendo en http://localhost:5000');
+  await app.listen(process.env.PORT || 5000);
 }
 
 bootstrap();

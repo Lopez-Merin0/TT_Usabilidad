@@ -42,6 +42,33 @@ const GameAudio: React.FC<GameAudioProps> = ({
         }
     }, [isMusicEnabled, musicVolume]);
 
+    // Los navegadores bloquean el audio hasta que el usuario interactúa con la página.
+    // Si el play() inicial fue bloqueado, se reintenta con la primera interacción.
+    useEffect(() => {
+        if (!isMusicEnabled) return;
+
+        const unlockAudio = () => {
+            const bgm = bgmRef.current;
+            if (!bgm || !bgm.paused) {
+                removeListeners();
+                return;
+            }
+            bgm.play()
+                .then(removeListeners)
+                .catch(error => {
+                    console.warn("No se pudo iniciar la BGM tras la interacción del usuario.", error);
+                });
+        };
+
+        const events = ['pointerdown', 'keydown', 'touchstart'];
+        const removeListeners = () => {
+            events.forEach(e => document.removeEventListener(e, unlockAudio));
+        };
+
+        events.forEach(e => document.addEventListener(e, unlockAudio));
+        return removeListeners;
+    }, [isMusicEnabled]);
+
     useEffect(() => {
         if (bgmRef.current) {
             bgmRef.current.volume = isMusicEnabled ? musicVolume : 0;

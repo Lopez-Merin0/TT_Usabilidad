@@ -17,6 +17,21 @@ import { Minigame2ProgressProvider } from '../contexts/Minigame2ProgressContext'
 import { Minigame3ProgressProvider } from '../contexts/Minigame3ProgressContext';
 import { GlobalProgressProvider } from '../contexts/GlobalProgressContext';
 
+const isAuthenticated = () => {
+  return localStorage.getItem('authToken') !== null;
+};
+
+// Revisa el token al momento de entrar a la ruta, no cuando se renderizó App.
+// Si se evalúa dentro de App, el resultado queda guardado del primer render y
+// después del login (sin recargar la página) sigue diciendo "no autenticado".
+const RequireAuth = ({ children }) => {
+  return isAuthenticated() ? children : <Navigate to="/" replace />;
+};
+
+const FallbackRedirect = () => {
+  return <Navigate to={isAuthenticated() ? '/room' : '/'} replace />;
+};
+
 const App = () => {
   const [isMusicEnabled, setIsMusicEnabled] = useState(
     () => {
@@ -29,10 +44,6 @@ const App = () => {
     localStorage.setItem('isMusicEnabled', JSON.stringify(isMusicEnabled));
   }, [isMusicEnabled]);
 
-
-  const isAuthenticated = () => {
-    return localStorage.getItem('authToken') !== null;
-  };
 
   const toggleMusic = () => {
     setIsMusicEnabled(prev => !prev);
@@ -162,18 +173,22 @@ const App = () => {
                 <Route
                   path="/room"
                   element={
-                    isAuthenticated() ? <Room /> : <Navigate to="/" />
+                    <RequireAuth>
+                      <Room />
+                    </RequireAuth>
                   }
                 />
 
                 <Route
                   path="/world"
                   element={
-                    isAuthenticated() ? <WorldScreen /> : <Navigate to="/" />
+                    <RequireAuth>
+                      <WorldScreen />
+                    </RequireAuth>
                   }
                 />
 
-                <Route path="*" element={isAuthenticated() ? <Navigate to="/room" /> : <Navigate to="/" />} />
+                <Route path="*" element={<FallbackRedirect />} />
               </Routes>
             </Router>
           </Minigame3ProgressProvider>

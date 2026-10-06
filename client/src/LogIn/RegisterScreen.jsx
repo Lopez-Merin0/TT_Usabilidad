@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../Mundo-Gen/api';
+import { AUTH_MESSAGES, SLOW_SERVER_DELAY_MS, getAuthErrorMessage } from './authMessages';
+import { AuthMessage, FieldError } from './AuthMessage';
 
 const { registerUser } = api; 
 
@@ -13,36 +15,43 @@ const RegisterScreen = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState(null);
   const [errors, setErrors] = useState({});
+  const slowServerTimer = useRef(null);
+  const redirectTimer = useRef(null);
+
+  useEffect(() => () => {
+    clearTimeout(slowServerTimer.current);
+    clearTimeout(redirectTimer.current);
+  }, []);
 
   const validateForm = () => {
     let newErrors = {};
     let isValid = true;
 
     if (!username.trim()) {
-      newErrors.username = 'Username cannot be empty';
+      newErrors.username = AUTH_MESSAGES.usernameEmpty;
       isValid = false;
     }
 
     if (!email.trim()) {
-      newErrors.email = 'Email cannot be empty';
+      newErrors.email = AUTH_MESSAGES.emailEmpty;
       isValid = false;
     } else if (!/\S+@\S+\.\S+/.test(email)) {
-      newErrors.email = 'Email must be a valid email address';
+      newErrors.email = AUTH_MESSAGES.emailInvalid;
       isValid = false;
     }
 
     if (!password) {
-      newErrors.password = 'Password cannot be empty';
+      newErrors.password = AUTH_MESSAGES.passwordEmpty;
       isValid = false;
     } else if (password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters long';
+      newErrors.password = AUTH_MESSAGES.passwordShort;
       isValid = false;
     }
 
     if (password !== confirmPassword) {
-      newErrors.confirmPassword = 'Passwords do not match.';
+      newErrors.confirmPassword = AUTH_MESSAGES.passwordsDontMatch;
       isValid = false;
     }
 
@@ -52,43 +61,36 @@ const RegisterScreen = () => {
 
   const handleRegister = async (event) => {
     event.preventDefault();
-    setMessage('');
+    setMessage(null);
     setErrors({});
 
     if (!validateForm()) return;
 
     setLoading(true);
+    // En el plan gratuito de Render el backend tarda en despertar
+    slowServerTimer.current = setTimeout(() => setMessage(AUTH_MESSAGES.serverWaking), SLOW_SERVER_DELAY_MS);
     try {
       const userData = { email, username, password };
-      console.log('Enviando datos de registro:', userData);
+      console.log('Enviando registro para:', userData.email);
       
       const result = await registerUser(userData); 
       console.log('Resultado del registro:', result);
       
-      setMessage('Registration successful! Redirecting to login...');
+      clearTimeout(slowServerTimer.current);
+      setMessage(AUTH_MESSAGES.registerSuccess);
       
-      setTimeout(() => {
+      redirectTimer.current = setTimeout(() => {
         navigate('/login');
       }, 1500);
       
     } catch (error) {
       console.error('Error completo en registro:', error);
-      
-      if (error.message.includes('Failed to fetch') || error.message.includes('ERR_CONNECTION_REFUSED')) {
-        setMessage('Unable to connect to the server. Make sure the backend is running at https://talkie-town-api.onrender.com');
-      } else {
-        const errorMsg = error.message || 'Unknown registration error.';
-        setMessage(errorMsg);
-      }
+      setMessage(getAuthErrorMessage(error, 'register'));
     } finally {
+      clearTimeout(slowServerTimer.current);
       setLoading(false);
     }
   };
-
-  const ErrorMessage = ({ error }) =>
-    error ? (
-      <p className="text-red-600 text-xs mt-1 font-semibold text-left mx-auto w-3/4">{error}</p>
-    ) : null;
 
   return (
     <div className="relative w-full h-screen flex items-center justify-center p-2 sm:p-4">
@@ -100,16 +102,7 @@ const RegisterScreen = () => {
         <div className="kawaii-panel p-4 sm:p-6">
           <h2 className="text-lg font-bold mb-4 text-[var(--kawaii-text-dark)]">Sign up to learn!</h2>
 
-          {message && (
-            <p
-              className={`mb-4 text-sm font-semibold p-2 rounded-xl transition duration-300 border ${message.toLowerCase().includes('exitoso')
-                  ? 'bg-green-100 border-green-600 text-green-800'
-                  : 'bg-red-100 border-red-600 text-red-800'
-                }`}
-            >
-              {message}
-            </p>
-          )}
+          <AuthMessage message={message} />
 
           <form onSubmit={handleRegister}>
             <div className="space-y-3 mb-6">
@@ -121,7 +114,7 @@ const RegisterScreen = () => {
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                 />
-                <ErrorMessage error={errors.username} />
+                <FieldError error={errors.username} />
               </div>
 
               <div>
@@ -132,7 +125,7 @@ const RegisterScreen = () => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                 />
-                <ErrorMessage error={errors.email} />
+                <FieldError error={errors.email} />
               </div>
 
               <div>
@@ -143,7 +136,7 @@ const RegisterScreen = () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />
-                <ErrorMessage error={errors.password} />
+                <FieldError error={errors.password} />
               </div>
 
               <div>
@@ -154,7 +147,7 @@ const RegisterScreen = () => {
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                 />
-                <ErrorMessage error={errors.confirmPassword} />
+                <FieldError error={errors.confirmPassword} />
               </div>
             </div>
 

@@ -216,3 +216,54 @@ box-shadow: 2px 2px 0px var(--kawaii-shadow-light);
 .animate-pulse {
     animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
+/* Mensajes de login y registro (inglés + apoyo en español) */
+
+.auth-message {
+    margin: 0 auto 1rem;
+    padding: 8px 12px;
+    border: 2px solid;
+    border-radius: 12px;
+    font-size: 0.875rem;
+    text-align: center;
+}
+
+.auth-message__en {
+    font-weight: 700;
+}
+
+.auth-message__es {
+    margin-top: 4px;
+    font-size: 0.75rem;
+    font-style: italic;
+    opacity: 0.85;
+}
+
+.auth-message--error {
+    background-color: #FBE3E1;
+    border-color: #C0574F;
+    color: #8A2E27;
+}
+
+.auth-message--success {
+    background-color: #E3F2E6;
+    border-color: #5E9C6A;
+    color: #2F5E39;
+}
+
+.auth-message--info {
+    background-color: #FDF3D8;
+    border-color: #C99A3B;
+    color: #6E4F12;
+}
+
+.auth-field-error {
+    width: 75%;
+    margin: 4px auto 0;
+    font-size: 0.75rem;
+    text-align: left;
+    color: #A8392F;
+}
+
+.auth-field-error .auth-message__es {
+    margin-top: 0;
+}

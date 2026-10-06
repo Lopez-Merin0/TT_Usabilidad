@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../Mundo-Gen/api'; 
+import { AUTH_MESSAGES, SLOW_SERVER_DELAY_MS, getAuthErrorMessage } from './authMessages';
+import { AuthMessage, FieldError } from './AuthMessage';
 
 const { loginUser } = api; 
 const saveAuthData = (token, userData) => {
@@ -66,31 +68,29 @@ const LoginScreen = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
-    const [message, setMessage] = useState('');
+    const [message, setMessage] = useState(null);
     const [errors, setErrors] = useState({}); 
+    const slowServerTimer = useRef(null);
 
-    const ErrorMessage = ({ error }) =>
-        error ? (
-            <p className="text-red-600 text-xs mt-1 font-semibold text-left mx-auto w-3/4">{error}</p>
-        ) : null;
+    useEffect(() => () => clearTimeout(slowServerTimer.current), []);
 
     const validateForm = () => {
         let newErrors = {};
         let isValid = true;
 
         if (!email.trim()) {
-            newErrors.email = 'Email cannot be empty'; // IsNotEmpty
+            newErrors.email = AUTH_MESSAGES.emailEmpty;
             isValid = false;
         } else if (!/\S+@\S+\.\S+/.test(email)) {
-            newErrors.email = 'Email must be a valid email address'; // IsEmail
+            newErrors.email = AUTH_MESSAGES.emailInvalid;
             isValid = false;
         }
 
         if (!password) {
-            newErrors.password = 'Password cannot be empty'; // IsNotEmpty
+            newErrors.password = AUTH_MESSAGES.passwordEmpty;
             isValid = false;
         } else if (password.length < 6) {
-            newErrors.password = 'Password must be at least 6 characters long'; // MinLength(6)
+            newErrors.password = AUTH_MESSAGES.passwordShort;
             isValid = false;
         }
         
@@ -100,16 +100,18 @@ const LoginScreen = () => {
 
     const handleLogin = async (event) => {
         event.preventDefault();
-        setMessage('');
+        setMessage(null);
         setErrors({});
 
         if (!validateForm()) return; 
 
         setLoading(true);
+        // En el plan gratuito de Render el backend tarda en despertar
+        slowServerTimer.current = setTimeout(() => setMessage(AUTH_MESSAGES.serverWaking), SLOW_SERVER_DELAY_MS);
 
         try {
             const credentials = { email, password };
-            console.log('Enviando credenciales:', credentials);
+            console.log('Enviando login para:', credentials.email);
             
             const result = await loginUser(credentials);
             console.log('Resultado completo del login:', result);
@@ -137,7 +139,7 @@ const LoginScreen = () => {
 
                 loadUserProgress(userData.id || userData._id, tokenToSave);
                 sessionStorage.removeItem('progressLoaded');
-                setMessage('Log in successful! Welcome home...');
+                setMessage(AUTH_MESSAGES.loginSuccess);
 
                 navigate('/room', { replace: true });
                 
@@ -148,14 +150,9 @@ const LoginScreen = () => {
 
         } catch (error) {
             console.error('Error completo en login:', error);
-            
-            if (error.message.includes('Failed to fetch') || error.message.includes('ERR_CONNECTION_REFUSED')) {
-                setMessage('Unable to connect to the server. Make sure the backend is running at https://talkie-town-api.onrender.com');
-            } else {
-                const errorMsg = error.message || 'Unknown login error.';
-                setMessage(errorMsg);
-            }
+            setMessage(getAuthErrorMessage(error, 'login'));
         } finally {
+            clearTimeout(slowServerTimer.current);
             setLoading(false);
         }
     };
@@ -171,16 +168,7 @@ const LoginScreen = () => {
                 <div className="kawaii-panel p-4 sm:p-6">
                     <h2 className="text-lg font-bold mb-4 text-[var(--kawaii-text-dark)]">Welcome back</h2>
 
-                    {message && (
-                        <p className={`mb-4 text-sm font-semibold p-2 rounded-xl transition duration-300 border 
-                            ${message.toLowerCase().includes('successful') 
-                                ? 'bg-green-100 border-green-600 text-green-800'
-                                : 'bg-red-100 border-red-600 text-red-800'
-                            }`}
-                        >
-                            {message}
-                        </p>
-                    )}
+                    <AuthMessage message={message} />
 
                     <form onSubmit={handleLogin}>
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginBottom: '2rem' }}>
@@ -193,7 +181,7 @@ const LoginScreen = () => {
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
                                 />
-                                <ErrorMessage error={errors.email} />
+                                <FieldError error={errors.email} />
                             </div>
                             
                             <div>
@@ -204,7 +192,7 @@ const LoginScreen = () => {
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
                                 />
-                                <ErrorMessage error={errors.password} />
+                                <FieldError error={errors.password} />
                             </div>
                             
                         </div>

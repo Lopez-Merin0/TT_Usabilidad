@@ -1,22 +1,31 @@
 const API_URL = 'https://talkie-town-api.onrender.com';
 
+// Lanza un Error que conserva el código HTTP (error.status) para que las
+// pantallas puedan mostrar un mensaje distinto según lo que pasó.
+const request = async (path, body, fallbackMessage) => {
+    const response = await fetch(`${API_URL}${path}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body),
+    });
+
+    // Si el backend está caído, Render responde HTML en lugar de JSON
+    const data = await response.json().catch(() => ({}));
+
+    if (!response.ok) {
+        const error = new Error(data.message || fallbackMessage);
+        error.status = response.status;
+        throw error;
+    }
+
+    return data;
+};
+
 export const registerUser = async (userData) => {
     try {
-        const response = await fetch(`${API_URL}/api/auth/register`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(userData),
-        });
-
-        const data = await response.json();
-
-        if (!response.ok) {
-            throw new Error(data.message || 'Error en el registro');
-        }
-
-        return data;
+        return await request('/api/auth/register', userData, 'Error en el registro');
     } catch (error) {
         console.error('Error en registerUser:', error);
         throw error;
@@ -25,21 +34,7 @@ export const registerUser = async (userData) => {
 
 export const loginUser = async (credentials) => {
     try {
-        const response = await fetch(`${API_URL}/api/auth/login`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(credentials),
-        });
-
-        const data = await response.json();
-
-        if (!response.ok) {
-            throw new Error(data.message || 'Login error');
-        }
-
-        return data;
+        return await request('/api/auth/login', credentials, 'Login error');
     } catch (error) {
         console.error('Error en loginUser:', error);
         throw error;

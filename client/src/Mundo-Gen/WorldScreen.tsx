@@ -308,16 +308,22 @@ const WorldScreen: React.FC = () => {
         };
     }, [handleKeyDown, handleKeyUp]);
 
-    const halfScreenW = viewport.width / 2;
-    const halfScreenH = viewport.height / 2;
+    // En pantallas más grandes que el mapa se amplía todo el mundo (mapa + personaje)
+    // para que cubra la pantalla. Las coordenadas del juego no cambian.
+    const worldZoom = Math.max(1, viewport.width / MAX_MAP_WIDTH, viewport.height / MAX_MAP_HEIGHT);
+    const visibleWidth = viewport.width / worldZoom;
+    const visibleHeight = viewport.height / worldZoom;
+
+    const halfScreenW = visibleWidth / 2;
+    const halfScreenH = visibleHeight / 2;
 
     const backgroundTranslateX = Math.max(
         Math.min(halfScreenW - characterState.mapX, 0),
-        viewport.width - MAX_MAP_WIDTH
+        visibleWidth - MAX_MAP_WIDTH
     );
     const backgroundTranslateY = Math.max(
         Math.min(halfScreenH - characterState.mapY, 0),
-        viewport.height - MAX_MAP_HEIGHT
+        visibleHeight - MAX_MAP_HEIGHT
     );
 
     const handleConfirmMinigame = () => {
@@ -355,6 +361,17 @@ const WorldScreen: React.FC = () => {
 
     return (
         <div className="relative w-screen h-screen overflow-hidden" style={{ backgroundColor: '#4c965c' }}>
+            <div
+                style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    width: `${visibleWidth}px`,
+                    height: `${visibleHeight}px`,
+                    transform: `scale(${worldZoom})`,
+                    transformOrigin: '0 0',
+                }}
+            >
             <CollisionDebugger
                 backgroundTranslateX={backgroundTranslateX}
                 backgroundTranslateY={backgroundTranslateY}
@@ -393,6 +410,7 @@ const WorldScreen: React.FC = () => {
                 direction={characterState.direction}
                 frame={characterState.frame}
             />
+            </div>
 
             <div className="fixed top-4 right-4 flex space-x-2" style={{ zIndex: 10 }}>
                 <ProgressButton

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { useKeyboardMovement } from './useKeyboardMovement';
 import { useNavigate } from 'react-router-dom';
 import Character from './Character';
 import CollisionDebugger from '../Colisiones/CollisionDebugger';
@@ -31,7 +32,8 @@ const BASE_SPRITE_SIZE = 16;
 const CHARACTER_SCALE_FACTOR = 1;
 const SCALED_SPRITE_SIZE = BASE_SPRITE_SIZE * CHARACTER_SCALE_FACTOR;
 
-const MOVEMENT_SPEED = 3.5;
+// Píxeles del mapa por segundo (antes ~105 px/s, limitado por la repetición de teclas)
+const MOVEMENT_SPEED = 200;
 const CUSTOM_MAX_X_POS = 1344;
 const CUSTOM_MAX_Y_POS = 840;
 
@@ -47,13 +49,6 @@ const MINIGAME_NAMES: { [key: string]: string } = {
     SecondMinigame: 'Verb Workshop',
     ThirdMinigame: 'Sweet Sounds',
     RoomMinigame: 'My Room',
-};
-
-const DIRECTION_MAP: { [key: string]: number } = {
-    'arrowup': 0, 'w': 0,
-    'arrowdown': 1, 's': 1,
-    'arrowleft': 2, 'a': 2,
-    'arrowright': 3, 'd': 3,
 };
 
 interface CharacterState {
@@ -228,29 +223,12 @@ const WorldScreen: React.FC = () => {
         }
     }, [showIntro]);
 
-    const handleKeyDown = useCallback((event: KeyboardEvent) => {
-        const isAnyPopupOpen = showIntro || showLogoutPopup || !!miniGamePopupState || !!completedMinigamePopup || showAllCompletedPopup || !!npcDialogue || !!lockedMessage;
-        if (isAnyPopupOpen) {
-            event.preventDefault();
-            event.stopPropagation();
-            setCharacterState(prev => ({ ...prev, isMoving: false }));
-            return;
-        }
-        const key = event.key.toLowerCase();
-        const direction = DIRECTION_MAP[key];
-        if (direction === undefined) return;
+    const isAnyPopupOpen = showIntro || showLogoutPopup || !!miniGamePopupState || !!completedMinigamePopup || showAllCompletedPopup || !!npcDialogue || !!lockedMessage;
 
-        event.preventDefault();
+    const moveCharacter = useCallback((dx: number, dy: number, direction: number) => {
         setCharacterState((prev) => {
-            let newX = prev.mapX;
-            let newY = prev.mapY;
-
-            switch (key) {
-                case 'arrowup': case 'w': newY -= MOVEMENT_SPEED; break;
-                case 'arrowdown': case 's': newY += MOVEMENT_SPEED; break;
-                case 'arrowleft': case 'a': newX -= MOVEMENT_SPEED; break;
-                case 'arrowright': case 'd': newX += MOVEMENT_SPEED; break;
-            }
+            const newX = prev.mapX + dx;
+            const newY = prev.mapY + dy;
 
             const HALF_SPRITE = SCALED_SPRITE_SIZE / 2;
             const limitedX = Math.max(HALF_SPRITE, Math.min(CUSTOM_MAX_X_POS - HALF_SPRITE, newX));
@@ -277,36 +255,24 @@ const WorldScreen: React.FC = () => {
 
             return { ...prev, mapX: finalX, mapY: finalY, direction, isMoving: true };
         });
-    }, [showIntro, showLogoutPopup, miniGamePopupState, completedMinigamePopup, showAllCompletedPopup, npcDialogue, lockedMessage]);
+    }, []);
 
-    const handleKeyUp = useCallback((event: KeyboardEvent) => {
-        const isAnyPopupOpen = showIntro || showLogoutPopup || !!miniGamePopupState || !!completedMinigamePopup || showAllCompletedPopup || !!npcDialogue || !!lockedMessage;
-        if (isAnyPopupOpen) {
-            event.preventDefault();
-            event.stopPropagation();
-            setCharacterState(prev => ({ ...prev, isMoving: false }));
-            return;
-        }
-        const key = event.key.toLowerCase();
-        if (DIRECTION_MAP[key] !== undefined) {
-            setCharacterState((prev) => ({ ...prev, isMoving: false }));
-        }
-    }, [showIntro, showLogoutPopup, miniGamePopupState, completedMinigamePopup, showAllCompletedPopup, npcDialogue, lockedMessage]);
+    const stopCharacter = useCallback(() => {
+        setCharacterState((prev) => (prev.isMoving ? { ...prev, isMoving: false } : prev));
+    }, []);
+
+    useKeyboardMovement({
+        enabled: !isAnyPopupOpen,
+        speed: MOVEMENT_SPEED,
+        onMove: moveCharacter,
+        onStop: stopCharacter,
+    });
 
     useEffect(() => {
         if (npcDialogue || miniGamePopupState || completedMinigamePopup || showAllCompletedPopup || showLogoutPopup || lockedMessage) {
             setCharacterState(prev => ({ ...prev, isMoving: false, frame: 0 }));
         }
     }, [npcDialogue, miniGamePopupState, completedMinigamePopup, showAllCompletedPopup, showLogoutPopup, lockedMessage]);
-
-    useEffect(() => {
-        window.addEventListener('keydown', handleKeyDown);
-        window.addEventListener('keyup', handleKeyUp);
-        return () => {
-            window.removeEventListener('keydown', handleKeyDown);
-            window.removeEventListener('keyup', handleKeyUp);
-        };
-    }, [handleKeyDown, handleKeyUp]);
 
     // En pantallas más grandes que el mapa se amplía todo el mundo (mapa + personaje)
     // para que cubra la pantalla. Las coordenadas del juego no cambian.
@@ -386,7 +352,6 @@ const WorldScreen: React.FC = () => {
                     boxShadow: '0 8px 0 0 #ff69b4',
                     overflow: 'hidden',
                     transform: `translate(${backgroundTranslateX}px, ${backgroundTranslateY}px)`,
-                    transition: 'transform 0.1s linear',
                     width: `${MAX_MAP_WIDTH}px`,
                     height: `${MAX_MAP_HEIGHT}px`,
                 }}

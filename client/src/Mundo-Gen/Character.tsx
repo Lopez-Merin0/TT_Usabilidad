@@ -54,7 +54,6 @@ const Character: React.FC<CharacterProps> = ({ x, y, direction, frame }) => {
         // Mueve el monito 
         transform: `translate(${x}px, ${y}px)`, 
         imageRendering: 'pixelated', 
-        transition: 'transform 0.1s linear', 
         zIndex: 10,
       }}
     />

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useKeyboardMovement } from './useKeyboardMovement';
 
 import Character from './Character';
 import LoadingScreen from '../LogIn/LoadingScreen';
@@ -20,15 +21,9 @@ const BASE_SPRITE_SIZE = 16;
 const CHARACTER_SCALE_FACTOR = 6;  // Reducido de 12 a 6 para hacer el personaje mucho más grande
 const SCALED_SPRITE_SIZE = BASE_SPRITE_SIZE * CHARACTER_SCALE_FACTOR;
 
-const MOVEMENT_SPEED = 5;
+// Píxeles del cuarto por segundo (antes ~150 px/s, limitado por la repetición de teclas)
+const MOVEMENT_SPEED = 190;
 const DEBUG_MODE = false; // Cambiar a true temporalmente para ver qué pasa
-
-const DIRECTION_MAP: { [key: string]: number } = {
-    'arrowup': 0, 'w': 0,
-    'arrowdown': 1, 's': 1,
-    'arrowleft': 2, 'a': 2,
-    'arrowright': 3, 'd': 3,
-};
 
 interface CharacterState {
     mapX: number;
@@ -90,28 +85,10 @@ const Room: React.FC = () => {
         };
     }, [characterState.isMoving]);
 
-    const handleKeyDown = useCallback((event: KeyboardEvent) => {
-        // Bloquear movimiento si hay algún popup activo
-        if (showLogoutPopup || showSleepPopup || showMapPopup) {
-            event.preventDefault();
-            return;
-        }
-
-        const key = event.key.toLowerCase();
-        const direction = DIRECTION_MAP[key];
-        if (direction === undefined) return;
-
-        event.preventDefault();
+    const moveCharacter = useCallback((dx: number, dy: number, direction: number) => {
         setCharacterState((prev) => {
-            let newX = prev.mapX;
-            let newY = prev.mapY;
-
-            switch (key) {
-                case 'arrowup': case 'w': newY -= MOVEMENT_SPEED; break;
-                case 'arrowdown': case 's': newY += MOVEMENT_SPEED; break;
-                case 'arrowleft': case 'a': newX -= MOVEMENT_SPEED; break;
-                case 'arrowright': case 'd': newX += MOVEMENT_SPEED; break;
-            }
+            const newX = prev.mapX + dx;
+            const newY = prev.mapY + dy;
 
             const HALF_SPRITE = SCALED_SPRITE_SIZE / 2;
             const MIN_X = HALF_SPRITE;
@@ -152,20 +129,18 @@ const Room: React.FC = () => {
                 isMoving: true,
             };
         });
-    }, [MAX_MAP_WIDTH, MAX_MAP_HEIGHT, showLogoutPopup, showSleepPopup, showMapPopup]);
+    }, [MAX_MAP_WIDTH, MAX_MAP_HEIGHT]);
 
-    const handleKeyUp = useCallback((event: KeyboardEvent) => {
-        // Bloquear movimiento si hay algún popup activo
-        if (showLogoutPopup || showSleepPopup || showMapPopup) {
-            event.preventDefault();
-            return;
-        }
+    const stopCharacter = useCallback(() => {
+        setCharacterState((prev) => (prev.isMoving ? { ...prev, isMoving: false } : prev));
+    }, []);
 
-        const key = event.key.toLowerCase();
-        if (DIRECTION_MAP[key] !== undefined) {
-            setCharacterState((prev) => ({ ...prev, isMoving: false }));
-        }
-    }, [showLogoutPopup, showSleepPopup, showMapPopup]);
+    useKeyboardMovement({
+        enabled: !(showIntro || showLogoutPopup || showSleepPopup || showMapPopup),
+        speed: MOVEMENT_SPEED,
+        onMove: moveCharacter,
+        onStop: stopCharacter,
+    });
 
     useEffect(() => {
         // Detener movimiento cuando aparezca un popup
@@ -175,18 +150,7 @@ const Room: React.FC = () => {
     }, [showLogoutPopup, showSleepPopup, showMapPopup]);
 
     useEffect(() => {
-        window.addEventListener('keydown', handleKeyDown);
-        window.addEventListener('keyup', handleKeyUp);
-        return () => {
-            window.removeEventListener('keydown', handleKeyDown);
-            window.removeEventListener('keyup', handleKeyUp);
-        };
-    }, [handleKeyDown, handleKeyUp]);
-
-    useEffect(() => {
         const { mapX, mapY } = characterState;
-        
-        console.log('🔍 Verificando zonas - Posición:', { mapX, mapY });
         
         // Zona de la cama (dormir) - ÁREA ALREDEDOR de la cama, no sobre ella
         const isNearBed = (
@@ -196,14 +160,6 @@ const Room: React.FC = () => {
             (mapX >= 100 && mapX <= 250 && mapY >= 375 && mapY <= 420)     // Abajo de la cama
         );
         const allMinigamesCompleted = checkAllMinigamesCompleted();
-        
-        console.log('🛏️ Verificando cama:', { 
-            isNearBed, 
-            allMinigamesCompleted,
-            showSleepPopup,
-            hasShownSleepPopup,
-            currentPos: { mapX, mapY }
-        });
         
         if (isNearBed && allMinigamesCompleted && !showSleepPopup && !hasShownSleepPopup) {
             console.log('💤 Activando popup de dormir');

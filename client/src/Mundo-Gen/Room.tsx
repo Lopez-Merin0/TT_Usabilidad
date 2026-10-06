@@ -8,6 +8,7 @@ import SleepPopup from '../components/Popups/SleepPopup';
 import { checkRoomCollision } from '../utils/collisionUtils';
 import { checkAllMinigamesCompleted } from '../utils/minigameUtils';
 import { ROOM_COLLISION_AREAS } from '../Colisiones/RoomCollisionAreas';
+import { WORLD_SPAWN_FROM_ROOM } from '../Colisiones/MiniGameTrigger';
 import '../index.css';
 import roomBackground from '../assets/mundo/cuarto.jpg';
 import ProgressButton from './ProgressButton';
@@ -300,6 +301,7 @@ const Room: React.FC = () => {
                             <button
                                 onClick={() => {
                                     setShowMapPopup(false);
+                                    localStorage.setItem('worldCharacterPosition', JSON.stringify(WORLD_SPAWN_FROM_ROOM));
                                     navigate('/world');
                                 }}
                                 className="kawaii-button py-2 px-4 font-bold"

@@ -42,10 +42,10 @@ const SIMPLE_COLLISION_AREAS: SimpleCollisionArea[] = [
         bottomRight: { x: 178, y: 250 },
         debugColor: '#FF0000',
     },
-    // cosa cafe de la derecha
+    // cosa cafe de la derecha (arbusto a la derecha del caminito de la casa azul)
     {
         topLeft: { x: 290, y: 222 },
-        bottomRight: { x: 178, y: 250 },
+        bottomRight: { x: 330, y: 250 },
         debugColor: '#FF0000',
     },
     // arbolito de la ardilla
@@ -268,12 +268,6 @@ const SIMPLE_COLLISION_AREAS: SimpleCollisionArea[] = [
     },
 
     // NPCs 
-    // NPC Victor (npc1)
-    {
-        topLeft: { x: 200, y: 180 },
-        bottomRight: { x: 320, y: 280 },
-        debugColor: '#FF0000',
-    },
     // NPC Pedro (npc2)
     {
         topLeft: { x: 1020, y: 200 },
@@ -290,12 +284,6 @@ const SIMPLE_COLLISION_AREAS: SimpleCollisionArea[] = [
     {
         topLeft: { x: 600, y: 400 },
         bottomRight: { x: 720, y: 500 },
-        debugColor: '#FF0000',
-    },
-    // NPC Carlos (npc5)
-    {
-        topLeft: { x: 900, y: 650 },
-        bottomRight: { x: 1020, y: 750 },
         debugColor: '#FF0000',
     },
 

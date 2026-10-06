@@ -12,7 +12,7 @@ const MINIGAME_TRIGGER_AREAS = [
     { name: 'FirstMinigame', xMin: 211, xMax: 246, yMin: 500, yMax: 535, color: '#00FF00' },
     { name: 'SecondMinigame', xMin: 718, xMax: 750, yMin: 140, yMax: 170, color: '#0000FF' },
     { name: 'ThirdMinigame', xMin: 1159, xMax: 1187, yMin: 635, yMax: 670, color: '#FF00FF' },
-    { name: 'RoomMinigame', xMin: 1050, xMax: 1120, yMin: 790, yMax: 830, color: '#FFA500' },
+    { name: 'RoomMinigame', xMin: 214, xMax: 250, yMin: 210, yMax: 235, color: '#FFA500' },
 ];
 
 const CollisionDebugger: React.FC<CollisionDebuggerProps> = ({ backgroundTranslateX, backgroundTranslateY }) => {

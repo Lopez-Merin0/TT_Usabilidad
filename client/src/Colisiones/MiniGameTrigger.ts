@@ -19,13 +19,17 @@ const TRIGGER_AREAS = {
         yMin: 635,
         yMax: 670,
     },
-    RoomMinigame: {  // Área para ir al cuarto - MOVIDA A ZONA ACCESIBLE
-        xMin: 200,   // Más amplio
-        xMax: 260,   // Más amplio
-        yMin: 260,   // Más abajo, fuera de colisiones
-        yMax: 310,   // Área más grande
+    RoomMinigame: {  // Área para ir al cuarto: justo frente a la puerta de la casa azul
+        xMin: 214,
+        xMax: 250,
+        yMin: 210,
+        yMax: 235,
     },
 };
+
+// Dónde aparece el personaje en el mundo al salir del cuarto: en el caminito
+// frente a la casa azul, debajo de la zona para entrar al cuarto
+export const WORLD_SPAWN_FROM_ROOM = { mapX: 232, mapY: 250, direction: 1 };
 
 interface UsePopupTriggerProps {
     mapX: number;

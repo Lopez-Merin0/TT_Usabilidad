@@ -1,0 +1,70 @@
+# Blueprint de Render: crea la base de datos, la API y el frontend.
+# Render vuelve a desplegar automáticamente cada servicio con cada push a la
+# rama que se elija al crear el Blueprint (autoDeploy).
+#
+# Pasos (una sola vez): Render > New > Blueprint > conectar el repo
+# Lopez-Merin0/TT_Usabilidad > elegir la rama (p. ej. mejoras-usabilidad).
+# Render pedirá los valores marcados con "sync: false".
+
+databases:
+  - name: talkie-town-db
+    plan: free
+    databaseName: talkietown_db
+    user: talkietown
+
+services:
+  # API (NestJS)
+  - type: web
+    name: talkie-town-api
+    runtime: node
+    plan: free
+    rootDir: server
+    buildCommand: npm ci && npm run build
+    startCommand: npm run start:prod
+    autoDeploy: true
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+      - key: DB_HOST
+        fromDatabase:
+          name: talkie-town-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: talkie-town-db
+          property: port
+      - key: DB_USERNAME
+        fromDatabase:
+          name: talkie-town-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: talkie-town-db
+          property: password
+      - key: DB_DATABASE
+        fromDatabase:
+          name: talkie-town-db
+          property: database
+      - key: JWT_SECRET
+        generateValue: true
+      # URL pública del frontend (p. ej. https://talkie-town-web.onrender.com) para CORS
+      - key: FRONTEND_URL
+        sync: false
+
+  # Frontend (Vite + React) como sitio estático
+  - type: web
+    name: talkie-town-web
+    runtime: static
+    rootDir: client
+    buildCommand: npm ci && npm run build
+    staticPublishPath: dist
+    autoDeploy: true
+    envVars:
+      # URL pública de la API (p. ej. https://talkie-town-api.onrender.com), sin "/" al final
+      - key: VITE_API_URL
+        sync: false
+    routes:
+      # Las rutas de React Router (/room, /world, ...) deben servir index.html
+      - type: rewrite
+        source: /*
+        destination: /index.html

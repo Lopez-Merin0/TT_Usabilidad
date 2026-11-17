@@ -1,4 +1,5 @@
-const API_URL = 'https://talkie-town-api.onrender.com';
+// Se puede cambiar con la variable VITE_API_URL al construir (p. ej. en Render)
+const API_URL = import.meta.env.VITE_API_URL || 'https://talkie-town-api.onrender.com';
 
 // Lanza un Error que conserva el código HTTP (error.status) para que las
 // pantallas puedan mostrar un mensaje distinto según lo que pasó.

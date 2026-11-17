@@ -11,6 +11,9 @@ interface GlobalProgressContextType {
     loadProgressFromServer: () => Promise<void>;
 }
 
+const API_URL = import.meta.env.VITE_API_URL || 'https://talkie-town-api.onrender.com';
+const PROGRESS_TIMEOUT_MS = 20000;
+
 const GlobalProgressContext = createContext<GlobalProgressContextType | undefined>(undefined);
 
 export const GlobalProgressProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
@@ -35,11 +38,16 @@ export const GlobalProgressProvider: React.FC<{ children: ReactNode }> = ({ chil
 
             console.log('Cargando progreso para usuario ID:', userId);
 
-            const response = await fetch(`https://talkie-town-api.onrender.com/api/progress/${userId}`, {
+            // Si el servidor no responde (p. ej. Render despertando) no se bloquea el juego
+            // para siempre: tras PROGRESS_TIMEOUT_MS se continúa con el progreso local.
+            const controller = new AbortController();
+            const timeout = setTimeout(() => controller.abort(), PROGRESS_TIMEOUT_MS);
+            const response = await fetch(`${API_URL}/api/progress/${userId}`, {
                 headers: {
                     'Authorization': `Bearer ${authToken}`
-                }
-            });
+                },
+                signal: controller.signal,
+            }).finally(() => clearTimeout(timeout));
 
             if (response.ok) {
                 const data = await response.json();
@@ -126,7 +134,7 @@ export const GlobalProgressProvider: React.FC<{ children: ReactNode }> = ({ chil
             console.log('=== Guardando en servidor ===');
             console.log('Payload:', JSON.stringify(payload, null, 2));
 
-            const response = await fetch('https://talkie-town-api.onrender.com/api/save-progress', {
+            const response = await fetch(`${API_URL}/api/save-progress`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -162,7 +170,14 @@ export const GlobalProgressProvider: React.FC<{ children: ReactNode }> = ({ chil
     }, []);
 
     if (isLoading) {
-        return <div>Loading progress...</div>;
+        return (
+            <div className="tt-overlay" role="status" aria-live="polite">
+                <div className="tt-card">
+                    <p className="tt-card__title">Loading your progress...</p>
+                    <p className="tt-card__subtitle-es">Cargando tu progreso... la primera vez puede tardar unos segundos.</p>
+                </div>
+            </div>
+        );
     }
 
     return (

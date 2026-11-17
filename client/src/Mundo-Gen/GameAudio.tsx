@@ -1,4 +1,5 @@
-import React, { useEffect, useRef, useCallback } from 'react';
+import React, { useEffect, useRef, useCallback, useState } from 'react';
+import { VOICE_PLAYING_EVENT } from '../ui/audioSettings';
 import background from '../assets/mundo/bg.mp3';
 import click from '../assets/mundo/click.mp3';
 
@@ -69,11 +70,22 @@ const GameAudio: React.FC<GameAudioProps> = ({
         return removeListeners;
     }, [isMusicEnabled]);
 
+    // Mientras suena un audio educativo (minijuego 3) la música baja al 15%
+    // para que no tape la voz; al terminar regresa a su volumen.
+    const [isVoicePlaying, setIsVoicePlaying] = useState(false);
+
+    useEffect(() => {
+        const onVoice = (event: Event) => setIsVoicePlaying(Boolean((event as CustomEvent).detail));
+        window.addEventListener(VOICE_PLAYING_EVENT, onVoice);
+        return () => window.removeEventListener(VOICE_PLAYING_EVENT, onVoice);
+    }, []);
+
     useEffect(() => {
         if (bgmRef.current) {
-            bgmRef.current.volume = isMusicEnabled ? musicVolume : 0;
+            const target = isMusicEnabled ? musicVolume : 0;
+            bgmRef.current.volume = isVoicePlaying ? target * 0.15 : target;
         }
-    }, [musicVolume, isMusicEnabled]);
+    }, [musicVolume, isMusicEnabled, isVoicePlaying]);
 
     const playClickSFX = useCallback(() => {
         const sfx = sfxRef.current;

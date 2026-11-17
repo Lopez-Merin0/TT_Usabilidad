@@ -1,4 +1,5 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef } from 'react';
+import { useVoiceAudio } from './useVoiceAudio';
 import { MINIGAME_3_QUESTIONS, Option } from './MiniData-3';
 import LoadingScreen from '../LogIn/LoadingScreen';
 import ExitConfirmationPopup from './ExitConfirmationPopup';
@@ -19,7 +20,8 @@ interface ThirdMinigameProps {
 
 const ThirdMinigame: React.FC<ThirdMinigameProps> = ({ userName }) => {
     const audioRef = useRef<HTMLAudioElement>(null);
-    const [isPlaying, setIsPlaying] = useState(false);
+    // Audio con volumen de voz regulable, refuerzo y opción lenta (#03)
+    const { isPlaying, voiceVolume, setVoiceVolume, play, handleEnded } = useVoiceAudio(audioRef);
 
     const {
         showIntro,
@@ -67,17 +69,6 @@ const ThirdMinigame: React.FC<ThirdMinigameProps> = ({ userName }) => {
         questionHeader: '',
     };
 
-    const handlePlayAudio = () => {
-        if (audioRef.current) {
-            audioRef.current.currentTime = 0;
-            audioRef.current.play();
-            setIsPlaying(true);
-        }
-    };
-
-    const handleAudioEnded = () => {
-        setIsPlaying(false);
-    };
 
     const baseStyle: React.CSSProperties = {
         position: 'fixed',
@@ -167,16 +158,6 @@ const ThirdMinigame: React.FC<ThirdMinigameProps> = ({ userName }) => {
         justifyContent: 'center',
     };
 
-    const audioPromptStyle: React.CSSProperties = {
-        fontSize: '1rem',  // Reducido de 1.2rem
-        color: KAWAI_COLORS.textDark,
-        padding: '5px 0',  // Reducido de 10px a 5px
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        marginBottom: '5px',  // Reducido de 10px a 5px
-    };
-
     const buttonText = getButtonText();
 
     const introText = (
@@ -216,30 +197,38 @@ const ThirdMinigame: React.FC<ThirdMinigameProps> = ({ userName }) => {
                 {dialogue.questionHeader}
             </h3>
 
-            <div style={audioPromptStyle}>
+            <div className="tt-audio-controls">
                 <button
-                    onClick={handlePlayAudio}
-                    disabled={isPlaying || isAnswered}
-                    style={{
-                        backgroundColor: KAWAI_COLORS.accentPink,
-                        color: KAWAI_COLORS.textDark,
-                        border: `4px solid ${KAWAI_COLORS.panelBorder}`,
-                        borderRadius: '50%',
-                        width: '50px',  // Reducido de 60px
-                        height: '50px',  // Reducido de 60px
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        fontSize: '1.2rem',  // Reducido de 1.5rem
-                        fontWeight: 'bold',
-                        cursor: (isPlaying || isAnswered) ? 'default' : 'pointer',
-                        boxShadow: isPlaying ? `2px 2px 0px ${KAWAI_COLORS.bgDark}` : `5px 5px 0px ${KAWAI_COLORS.panelBorder}`,
-                        transition: 'all 0.1s ease-in-out',
-                        transform: isPlaying ? 'scale(0.95)' : 'scale(1)',
-                    }}
+                    type="button"
+                    className="tt-audio-btn"
+                    onClick={() => play(1)}
+                    disabled={isAnswered}
+                    aria-label="Play the audio"
                 >
-                    {isPlaying ? '⏸️' : '🔊'}
+                    {isPlaying ? '🔁 Play again' : '🔊 Play'}
                 </button>
+                <button
+                    type="button"
+                    className="tt-audio-btn tt-audio-btn--slow"
+                    onClick={() => play(0.75)}
+                    disabled={isAnswered}
+                    aria-label="Play the audio slowly"
+                >
+                    🐢 Slow
+                </button>
+                <label htmlFor="tt-voice-volume-game">
+                    🗣️ Volume
+                    <input
+                        id="tt-voice-volume-game"
+                        type="range"
+                        min="0"
+                        max="1"
+                        step="0.05"
+                        value={voiceVolume}
+                        onChange={(e) => setVoiceVolume(parseFloat(e.target.value))}
+                    />
+                    {Math.round(voiceVolume * 100)}%
+                </label>
             </div>
 
             <p style={{ 
@@ -280,7 +269,7 @@ const ThirdMinigame: React.FC<ThirdMinigameProps> = ({ userName }) => {
             <audio
                 ref={audioRef}
                 src={audioUrl}
-                onEnded={handleAudioEnded}
+                onEnded={handleEnded}
                 preload="auto"
             />
 

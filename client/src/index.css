@@ -1,7 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;700&family=Mali:wght@400;700&display=swap');
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* Tailwind v4: tema + utilidades, sin el reset base (preflight) para no
+   cambiar el diseño existente. Con las directivas @tailwind de v3 faltaban
+   las variables del tema y no funcionaban inset-0, top-4, p-6, etc. */
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities);
 
 :root {
   --kawaii-bg-light: #FBF0DF;

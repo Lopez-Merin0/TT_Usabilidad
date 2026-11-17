@@ -286,7 +286,7 @@ const Room: React.FC = () => {
             </div>
 
             {showMapPopup && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
                     <div className="kawaii-popup p-6 rounded-lg shadow-lg text-center"
                         style={{
                             backgroundColor: '#fefefe',

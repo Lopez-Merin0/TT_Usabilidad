@@ -11,6 +11,8 @@ interface GlobalProgressContextType {
     loadProgressFromServer: () => Promise<void>;
 }
 
+const API_URL = import.meta.env.VITE_API_URL || 'https://talkie-town-api.onrender.com';
+
 const GlobalProgressContext = createContext<GlobalProgressContextType | undefined>(undefined);
 
 export const GlobalProgressProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
@@ -35,7 +37,7 @@ export const GlobalProgressProvider: React.FC<{ children: ReactNode }> = ({ chil
 
             console.log('Cargando progreso para usuario ID:', userId);
 
-            const response = await fetch(`https://talkie-town-api.onrender.com/api/progress/${userId}`, {
+            const response = await fetch(`${API_URL}/api/progress/${userId}`, {
                 headers: {
                     'Authorization': `Bearer ${authToken}`
                 }
@@ -126,7 +128,7 @@ export const GlobalProgressProvider: React.FC<{ children: ReactNode }> = ({ chil
             console.log('=== Guardando en servidor ===');
             console.log('Payload:', JSON.stringify(payload, null, 2));
 
-            const response = await fetch('https://talkie-town-api.onrender.com/api/save-progress', {
+            const response = await fetch(`${API_URL}/api/save-progress`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

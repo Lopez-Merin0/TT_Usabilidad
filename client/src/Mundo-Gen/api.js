@@ -1,4 +1,5 @@
-const API_URL = 'https://talkie-town-api.onrender.com';
+// Solo para el despliegue: la API se configura con VITE_API_URL
+const API_URL = import.meta.env.VITE_API_URL || 'https://talkie-town-api.onrender.com';
 
 export const registerUser = async (userData) => {
     try {

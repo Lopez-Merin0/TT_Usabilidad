@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import api from '../Mundo-Gen/api'; 
 
 const { loginUser } = api; 
+const API_URL = import.meta.env.VITE_API_URL || 'https://talkie-town-api.onrender.com';
 const saveAuthData = (token, userData) => {
     try {
         localStorage.setItem('userToken', token);
@@ -23,7 +24,7 @@ const loadUserProgress = async (userId, token) => {
     try {
         console.log('Cargando progreso del usuario:', userId);
         
-        const response = await fetch(`https://talkie-town-api.onrender.com/api/progress/${userId}`, {
+        const response = await fetch(`${API_URL}/api/progress/${userId}`, {
             headers: {
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json'

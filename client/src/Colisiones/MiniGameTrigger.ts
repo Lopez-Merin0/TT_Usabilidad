@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-const TRIGGER_AREAS = {
+export const TRIGGER_AREAS = {
     FirstMinigame: {
         xMin: 211,
         xMax: 246,

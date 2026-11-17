@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import cafeImage from '../assets/mundo/mini1.jpeg';
 import gramaticaImage from '../assets/mundo/mini2.jpeg';
 import carameloImage from '../assets/mundo/mini3.jpeg';
+import { getOverallProgress, MINIGAMES } from '../ui/gameProgress';
 
 interface MinigameProgress {
     completedQuestions: number[];
@@ -44,6 +45,8 @@ const ProgressMap: React.FC<ProgressMapProps> = ({ onClose }) => {
     const minigame2Completed = minigame2.completedQuestions.length;
     const minigame3Completed = minigame3.completedQuestions.length;
 
+    const overall = getOverallProgress();
+
     const isMinigame1Unlocked = true;
     const isMinigame2Unlocked = minigame1Completed >= 2;
     const isMinigame3Unlocked = minigame1Completed >= 2 && minigame2Completed >= 2;
@@ -55,16 +58,16 @@ const ProgressMap: React.FC<ProgressMapProps> = ({ onClose }) => {
                 style={{
                     width: '80vw',
                     maxWidth: '1000px',
-                    height: '70vh',
-                    maxHeight: '600px',
+                    maxHeight: '92vh',
+                    overflowY: 'auto',
                     border: '8px solid #ff69b4',
                     borderRadius: '30px',
                     boxShadow: '0 10px 30px rgba(0, 0, 0, 0.5)',
                     backgroundColor: '#FBF0DF',
-                    padding: '30px 20px 20px',
+                    padding: '24px 20px 16px',
                 }}
             >
-                <div className="text-center mb-6">
+                <div className="text-center" style={{ marginBottom: '12px' }}>
                     <h1 className="kawaii-header text-4xl mb-2" style={{ color: '#4A3C32', textShadow: '2px 2px 0px rgba(255, 255, 255, 0.5)' }}>
                         Progress Map
                     </h1>
@@ -73,7 +76,34 @@ const ProgressMap: React.FC<ProgressMapProps> = ({ onClose }) => {
                     </p>
                 </div>
 
-                <div className="flex justify-center items-center gap-6 mb-auto">
+                {/* Barra de progreso general (hallazgo #17) */}
+                <div className="tt-progress" role="group" aria-label="Overall progress">
+                    <div className="tt-progress__head">
+                        <span>Overall progress <span className="tt-es">Progreso general</span></span>
+                        <strong>{overall.percent}%</strong>
+                    </div>
+                    <div
+                        className="tt-progress__bar"
+                        role="progressbar"
+                        aria-valuemin={0}
+                        aria-valuemax={100}
+                        aria-valuenow={overall.percent}
+                    >
+                        <div className="tt-progress__fill" style={{ width: `${overall.percent}%` }} />
+                    </div>
+                    <p className="tt-progress__explain">
+                        {overall.completedChallenges} of {overall.totalChallenges} challenges completed. Each activity has {MINIGAMES[0].total} challenges; finish all of them to reach 100%.
+                        <span className="tt-es"> Llevas {overall.completedChallenges} de {overall.totalChallenges} retos. Cada actividad tiene {MINIGAMES[0].total} retos; complétalos todos para llegar al 100%.</span>
+                    </p>
+                    {overall.next && (
+                        <p className="tt-progress__next">
+                            🎯 Next: <b>{overall.next.name}</b> in the {overall.next.houseEn}.
+                            <span className="tt-es"> Siguiente: {overall.next.nameEs}, en la {overall.next.houseEs}.</span>
+                        </p>
+                    )}
+                </div>
+
+                <div className="flex justify-center items-center" style={{ gap: '16px', flexWrap: 'wrap', margin: '16px 0' }}>
                     
                     <div className="flex flex-col items-center">
                         <div

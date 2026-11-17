@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import ProgressMap from '../components/ProgressMap';
+import { getOverallProgress } from '../ui/gameProgress';
 
 interface ProgressButtonProps {
     disabled?: boolean;
@@ -7,21 +8,22 @@ interface ProgressButtonProps {
 
 const ProgressButton: React.FC<ProgressButtonProps> = ({ disabled = false }) => {
     const [showProgressMap, setShowProgressMap] = useState(false);
+    const { percent } = getOverallProgress();
 
     return (
         <>
             <button
+                type="button"
                 onClick={() => setShowProgressMap(true)}
-                className="kawaii-button py-1 px-2 flex items-center space-x-1"
-                style={{
-                    backgroundColor: '#FFD700',
-                    color: '#333',
-                    border: '3px solid #FFA500',
-                    fontSize: '0.75rem',
-                }}
+                className="tt-hud__btn tt-hud__btn--progress"
                 disabled={disabled}
+                title="See your progress / Ver tu progreso"
             >
-                <span className="font-bold">PROGRESS</span>
+                <span>PROGRESS</span>
+                <span className="tt-hud__meter" aria-hidden="true">
+                    <span className="tt-hud__meter-fill" style={{ width: `${percent}%` }} />
+                </span>
+                <span>{percent}%</span>
             </button>
 
             {showProgressMap && <ProgressMap onClose={() => setShowProgressMap(false)} />}

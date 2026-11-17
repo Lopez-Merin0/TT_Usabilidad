@@ -26,7 +26,7 @@ export const checkMinigameUnlocked = (triggerName: string): { unlocked: boolean;
             if (!minigame1Completed) {
                 return { 
                     unlocked: false, 
-                    message: 'You must complete the 2 levels of the First Mini-Game to unlock this mini-game.'
+                    message: 'Locked: finish Word Hunt (2 challenges) first to unlock Verb Workshop.'
                 };
             }
             return { unlocked: true, message: '' };
@@ -35,7 +35,7 @@ export const checkMinigameUnlocked = (triggerName: string): { unlocked: boolean;
             if (!minigame1Completed || !minigame2Completed) {
                 return { 
                     unlocked: false, 
-                    message: 'You must complete the 2 levels of the Second Mini-Game to unlock this mini-game.'
+                    message: 'Locked: finish Verb Workshop (2 challenges) first to unlock Sweet Sounds.'
                 };
             }
             return { unlocked: true, message: '' };

@@ -18,6 +18,9 @@ const MiniGameConfirmationPopup: React.FC<MiniGameConfirmationPopupProps> = ({ m
             <p className="text-xl font-bold mb-4" style={{ color: '#333333' }}>
                 Do you want to enter {minigameName}?
             </p>
+            <p className="tt-es" style={{ display: 'block', marginBottom: '16px' }}>
+                ¿Quieres entrar a esta actividad?
+            </p>
             <div className="flex justify-center space-x-4">
                 <button
                     onClick={onConfirm}

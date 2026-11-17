@@ -18,6 +18,9 @@ const LockedMinigamePopup: React.FC<LockedMinigamePopupProps> = ({ message, onCl
             <p className="text-xl font-bold mb-4" style={{ color: '#333333' }}>
                 {message}
             </p>
+            <p className="tt-es" style={{ display: 'block', marginBottom: '16px' }}>
+                Esta actividad está bloqueada. Termina primero la actividad marcada con ⭐ en el mapa.
+            </p>
             <button
                 onClick={onClose}
                 className="kawaii-button py-2 px-4 font-bold"

@@ -20,6 +20,9 @@ const CompletedMinigamePopup: React.FC<CompletedMinigamePopupProps> = ({ minigam
             <p className="text-base mb-4" style={{ color: '#666666' }}>
                 You have completed <strong>{minigameName}</strong> and all its activities.
             </p>
+            <p className="tt-es" style={{ display: 'block', marginBottom: '16px' }}>
+                ¡Felicidades! Ya completaste esta actividad. Busca la siguiente ⭐ en el mapa.
+            </p>
             <button
                 onClick={onClose}
                 className="kawaii-button py-2 px-6 font-bold"

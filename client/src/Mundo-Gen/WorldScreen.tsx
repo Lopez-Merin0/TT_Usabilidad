@@ -7,7 +7,11 @@ import { usePopupTrigger } from '../Colisiones/MiniGameTrigger';
 import LoadingScreen from '../LogIn/LoadingScreen';
 import NPCDialoguePopup from '../NPC/NPCDialoguePopup';
 import { NPC_LIST, NPCDialogue } from '../NPC/NPCConfig';
-import ProgressButton from './ProgressButton';
+import GameHud from '../ui/GameHud';
+import GoalBanner from '../ui/GoalBanner';
+import Tutorial from '../ui/Tutorial';
+import WorldGuides from '../ui/WorldGuides';
+import { getOverallProgress } from '../ui/gameProgress';
 import ConfirmationPopup from '../components/Popups/ConfirmationPopup';
 import MiniGameConfirmationPopup from '../components/Popups/MiniGameConfirmationPopup';
 import CompletedMinigamePopup from '../components/Popups/CompletedMinigamePopup';
@@ -31,6 +35,12 @@ const SCALE_FACTOR = 1.4;
 const BASE_SPRITE_SIZE = 16;
 const CHARACTER_SCALE_FACTOR = 1;
 const SCALED_SPRITE_SIZE = BASE_SPRITE_SIZE * CHARACTER_SCALE_FACTOR;
+
+// El sprite se dibuja de 112 px (Character.tsx) pero se posiciona restando solo
+// SCALED_SPRITE_SIZE / 2 = 8 px, así que el personaje se ve ~48 px abajo y a la
+// derecha de su posición lógica. Las zonas de minijuegos y NPC están calibradas
+// con lo que se ve, así que los indicadores del mapa usan el mismo desfase.
+const CHARACTER_VISUAL_OFFSET = 112 / 2 - SCALED_SPRITE_SIZE / 2;
 
 // Píxeles del mapa por segundo (antes ~105 px/s, limitado por la repetición de teclas)
 const MOVEMENT_SPEED = 200;
@@ -59,13 +69,14 @@ interface CharacterState {
     isMoving: boolean;
 }
 
-const LogOutIcon = (props: React.SVGProps<SVGSVGElement>) => (
-    <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-        <polyline points="16 17 21 12 16 7"></polyline>
-        <line x1="21" y1="12" x2="9" y2="12"></line>
-    </svg>
-);
+const getStoredUserName = (): string => {
+    try {
+        const data = localStorage.getItem('userData');
+        return data ? JSON.parse(data).username || 'Player' : 'Player';
+    } catch {
+        return 'Player';
+    }
+};
 
 const WorldScreen: React.FC = () => {
     const navigate = useNavigate();
@@ -80,6 +91,7 @@ const WorldScreen: React.FC = () => {
     const [lockedMessage, setLockedMessage] = useState<string | null>(null);
     const [currentNPCTrigger, setCurrentNPCTrigger] = useState<string | null>(null);
     const [lastNPCTrigger, setLastNPCTrigger] = useState<string | null>(null);
+    const [showTutorial, setShowTutorial] = useState(false);
 
     const [viewport, setViewport] = useState({
         width: typeof window !== 'undefined' ? window.innerWidth : 1024,
@@ -223,7 +235,7 @@ const WorldScreen: React.FC = () => {
         }
     }, [showIntro]);
 
-    const isAnyPopupOpen = showIntro || showLogoutPopup || !!miniGamePopupState || !!completedMinigamePopup || showAllCompletedPopup || !!npcDialogue || !!lockedMessage;
+    const isAnyPopupOpen = showIntro || showTutorial || showLogoutPopup || !!miniGamePopupState || !!completedMinigamePopup || showAllCompletedPopup || !!npcDialogue || !!lockedMessage;
 
     const moveCharacter = useCallback((dx: number, dy: number, direction: number) => {
         setCharacterState((prev) => {
@@ -325,6 +337,8 @@ const WorldScreen: React.FC = () => {
         return <LoadingScreen onAnimationEnd={() => setShowIntro(false)} />;
     }
 
+    const nextGame = getOverallProgress().next;
+
     return (
         <div className="relative w-screen h-screen overflow-hidden" style={{ backgroundColor: '#4c965c' }}>
             <div
@@ -368,6 +382,15 @@ const WorldScreen: React.FC = () => {
                 />
             </div>
 
+            {/* Las guías se desplazan igual que el sprite visible del personaje (ver CHARACTER_VISUAL_OFFSET) */}
+            <WorldGuides
+                translateX={backgroundTranslateX + CHARACTER_VISUAL_OFFSET}
+                translateY={backgroundTranslateY + CHARACTER_VISUAL_OFFSET}
+                characterX={characterState.mapX}
+                characterY={characterState.mapY}
+                showArrow={!isAnyPopupOpen}
+            />
+
             <Character
                 x={characterState.mapX + backgroundTranslateX - SCALED_SPRITE_SIZE / 2}
                 y={characterState.mapY + backgroundTranslateY - SCALED_SPRITE_SIZE / 2}
@@ -377,26 +400,25 @@ const WorldScreen: React.FC = () => {
             />
             </div>
 
-            <div className="fixed top-4 right-4 flex space-x-2" style={{ zIndex: 10 }}>
-                <ProgressButton
-                    disabled={showLogoutPopup || !!miniGamePopupState || !!completedMinigamePopup || showAllCompletedPopup}
-                />
+            <GameHud
+                disabled={showLogoutPopup || !!miniGamePopupState || !!completedMinigamePopup || showAllCompletedPopup || showTutorial}
+                onHelp={() => setShowTutorial(true)}
+                onLogout={() => setShowLogoutPopup(true)}
+            />
 
-                <button
-                    onClick={() => setShowLogoutPopup(true)}
-                    className="kawaii-button py-1 px-2 flex items-center space-x-1"
-                    style={{
-                        backgroundColor: '#ff69b4',
-                        color: 'white',
-                        border: '3px solid #e04e9e',
-                        fontSize: '0.75rem',
-                    }}
-                    disabled={showLogoutPopup || !!miniGamePopupState || !!completedMinigamePopup || showAllCompletedPopup}
-                >
-                    <LogOutIcon className="w-3 h-3" />
-                    <span className="font-bold">LOG OUT</span>
-                </button>
-            </div>
+            {!isAnyPopupOpen && (
+                nextGame ? (
+                    <GoalBanner
+                        text={<>Next: <b>⭐ {nextGame.name}</b> in the {nextGame.houseEn}. Follow the yellow arrow ➤</>}
+                        textEs={`Siguiente: ${nextGame.nameEs}, en la ${nextGame.houseEs}. Sigue la flecha amarilla y camina a la puerta que brilla.`}
+                    />
+                ) : (
+                    <GoalBanner
+                        text={<>All activities done! Go back to <b>🏠 My Room</b> to rest.</>}
+                        textEs="¡Completaste todas las actividades! Regresa a tu casa (My Room) para descansar."
+                    />
+                )
+            )}
 
             {DEBUG_MODE && (
                 <div className="fixed bottom-4 left-4 p-2 text-xs font-bold rounded" style={{ zIndex: 10, backgroundColor: '#add8e6', color: '#333333', border: '2px solid #6495ed', boxShadow: '2px 2px 0px #6495ed' }}>
@@ -404,6 +426,7 @@ const WorldScreen: React.FC = () => {
                 </div>
             )}
 
+            {showTutorial && <Tutorial userName={getStoredUserName()} onClose={() => setShowTutorial(false)} />}
             {showLogoutPopup && <ConfirmationPopup onConfirm={() => { setShowLogoutPopup(false); navigate('/'); }} onCancel={() => setShowLogoutPopup(false)} />}
             {miniGamePopupState?.isVisible && <MiniGameConfirmationPopup minigameName={miniGamePopupState.gameName} onConfirm={handleConfirmMinigame} onCancel={() => setMiniGamePopupState(null)} />}
             {completedMinigamePopup?.isVisible && <CompletedMinigamePopup minigameName={completedMinigamePopup.gameName} onClose={() => setCompletedMinigamePopup(null)} />}

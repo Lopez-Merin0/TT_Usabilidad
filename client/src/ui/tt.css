@@ -290,6 +290,133 @@
   .tt-hud__btn--map, .tt-marker--next, .tt-marker--npc, .tt-spot, .tt-exit, .tt-tutorial__emoji { animation: none; }
 }
 
+/* ---------- Minijuegos: apoyos (español, pistas, cómo jugar, confirmar) ---------- */
+.tt-mg-es {
+  display: block;
+  margin: 3px 0 0;
+  font-size: 0.92em;
+  font-style: italic;
+  color: #2F5E8A;
+}
+span.tt-mg-es { display: inline; }
+
+.tt-assist {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 25;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  max-width: calc(100vw - 420px);
+}
+.tt-assist__btn {
+  font-family: 'Mali', cursive;
+  font-weight: 700;
+  font-size: 1rem;
+  padding: 8px 14px;
+  border-radius: 16px;
+  border: 3px solid #8B7360;
+  background: #F7F0E6;
+  color: #4A3C32;
+  box-shadow: 0 4px 0 #8B7360;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.tt-assist__btn:hover:not(:disabled) { transform: translateY(-2px); }
+.tt-assist__btn:disabled { opacity: 0.5; cursor: default; }
+.tt-assist__btn:focus-visible { outline: 3px solid #3D78B0; outline-offset: 2px; }
+.tt-assist__btn--hint { background: #FFE58A; border-color: #C99A00; box-shadow: 0 4px 0 #C99A00; }
+.tt-assist__btn--es.is-on { background: #DCEBFA; border-color: #3D78B0; box-shadow: 0 4px 0 #3D78B0; }
+
+.tt-hintbox {
+  margin-top: 8px;
+  padding: 8px 12px;
+  border-radius: 12px;
+  background: #FFF6CC;
+  border: 2px dashed #C99A00;
+  text-align: left;
+}
+.tt-hintbox__item { margin: 2px 0; font-size: 1rem; color: #4A3C32; }
+.tt-hintbox__item--small { font-size: 0.9rem; }
+
+.tt-check { display: flex; align-items: center; justify-content: flex-end; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
+.tt-check__hint { font-size: 0.9rem; color: #5C4A3D; font-style: italic; }
+
+/* Opción seleccionada antes de confirmar y opción descartada por pista */
+.tt-option-pending {
+  outline: 4px solid #3D78B0 !important;
+  outline-offset: 2px;
+  background-color: #DCEBFA !important;
+  position: relative;
+}
+.tt-option-pending::after {
+  content: '✓';
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #3D78B0;
+  color: #fff;
+  font-size: 15px;
+  line-height: 24px;
+  text-align: center;
+  font-weight: 700;
+}
+.tt-option-eliminated {
+  opacity: 0.3 !important;
+  filter: grayscale(1);
+  text-decoration: line-through;
+  cursor: not-allowed !important;
+}
+
+/* Cómo jugar */
+.tt-howto { max-width: 600px; text-align: left; }
+.tt-howto .tt-card__title, .tt-howto .tt-card__subtitle-es { text-align: center; }
+.tt-howto__example {
+  margin: 4px 0 10px;
+  padding: 12px;
+  border-radius: 16px;
+  background: #fff;
+  border: 3px dashed #8B7360;
+  text-align: center;
+}
+.tt-howto__example-label { margin: 0 0 8px; font-weight: 700; font-size: 0.95rem; }
+.tt-howto__prompt { margin: 0 0 8px; font-size: 1.05rem; }
+.tt-howto__options { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-bottom: 10px; }
+.tt-howto__opt {
+  min-width: 64px;
+  padding: 8px 12px;
+  border-radius: 12px;
+  border: 3px solid #8B7360;
+  background: #F7F0E6;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.tt-howto__opt img { width: 44px; height: 44px; object-fit: contain; image-rendering: pixelated; }
+.tt-howto__opt.is-picked { outline: 4px solid #3D78B0; outline-offset: 2px; background: #DCEBFA; animation: tt-pick 2.4s ease-in-out infinite; }
+.tt-howto__mock-check {
+  display: inline-block;
+  padding: 6px 14px;
+  border-radius: 14px;
+  background: #B2D8BB;
+  border: 3px solid #8B7360;
+  font-family: 'Mali', cursive;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+.tt-howto__steps { margin: 0; padding: 0; list-style: none; }
+.tt-howto__steps li { display: flex; gap: 10px; align-items: flex-start; margin: 8px 0; font-size: 1.02rem; line-height: 1.4; }
+.tt-howto__step-icon { font-size: 1.3rem; min-width: 28px; text-align: center; }
+.tt-howto__step-es { display: block; font-size: 0.9rem; font-style: italic; color: #5C4A3D; }
+@keyframes tt-pick { 0%, 30% { transform: scale(1); } 45% { transform: scale(1.08); } 60%, 100% { transform: scale(1); } }
+
 /* Controles de audio del minijuego 3 */
 .tt-audio-controls { display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap; margin: 6px 0; }
 .tt-audio-controls label { font-size: 0.9rem; font-weight: 700; display: inline-flex; align-items: center; gap: 6px; }

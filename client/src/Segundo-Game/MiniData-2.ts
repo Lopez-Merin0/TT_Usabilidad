@@ -1,3 +1,4 @@
+import type { QuestionSupport } from '../components/minigame/supportTypes';
 export interface Option {
     id: number;
     text: string;
@@ -120,3 +121,49 @@ export const MINIGAME_2_QUESTIONS: MinigameQuestion[] = [
         },
     }
 ];
+
+// Apoyo en español y pistas progresivas por id de pregunta (hallazgos #07 y #08)
+export const MINIGAME_2_SUPPORT: Record<number, QuestionSupport> = {
+    1: {
+        es: {
+            rules: 'Completa la oración eligiendo la forma correcta del verbo "to be" (ser/estar).',
+            introTitle: '🎁 ¡Bienvenido/a a Verb Workshop (Taller de verbos)!',
+            introGreeting: [
+                '¡Hola! Qué gusto verte por aquí.',
+                'Soy Cristi. Un cliente dejó una nota con una pequeña misión:',
+                'Quiere ver si conocemos las formas del verbo "to be". ¿Aceptas el reto?',
+                'Tu misión: completa la oración eligiendo la forma correcta de "to be". ¡Vamos!',
+            ],
+            correctFeedback: '¡Perfecto! La forma correcta es "{text}". "She is playing soccer" (Ella está jugando futbol) suena excelente. ¡Buen trabajo!',
+            wrongAttempt1: 'Casi. Recuerda que "she" (ella) es singular. ¿Qué forma de "to be" va aquí? Te queda un intento.',
+            wrongAttempt2: 'Está bien. ¡Sigue ganando experiencia!',
+            instruction: 'Elige la forma correcta del verbo "to be" para completar la oración.',
+            questionHeader: 'El reto es: ',
+        },
+        hints: [
+            { en: '"She" is only one person, like "he" and "it".', es: '"She" (ella) es una sola persona, como "he" e "it".' },
+            { en: 'With he, she and it, the verb "to be" ends in "s".', es: 'Con he, she e it, el verbo "to be" termina en "s".' },
+        ],
+    },
+    2: {
+        es: {
+            rules: 'Completa la oración eligiendo la forma correcta del verbo "to be" en plural.',
+            introTitle: '🚀 ¡Hora del nivel 2!',
+            introGreeting: [
+                '¡Hola! Veo que regresaste con mucha energía.',
+                'Cristi encontró otra nota misteriosa. Parece que alguien quiere retarnos otra vez.',
+                'Esta vez usa la forma correcta del verbo "to be" en plural. Fácil, ¿no?',
+                'Demuestra tus habilidades con el idioma.',
+            ],
+            correctFeedback: '¡Eso es! "{text}" es la forma correcta. "We are ready" (Estamos listos) suena perfecto. ¡Vas volando!',
+            wrongAttempt1: 'Muy cerca, pero no. Recuerda que "we" (nosotros) es primera persona del plural. Te queda un intento. ¡Tú puedes!',
+            wrongAttempt2: 'Está bien. ¡Sigue adelante!',
+            instruction: 'Elige la forma correcta del verbo "to be".',
+            questionHeader: 'Completa la oración: ',
+        },
+        hints: [
+            { en: '"We" means more than one person.', es: '"We" (nosotros) es más de una persona.' },
+            { en: 'Use the same form as in "you ___" and "they ___".', es: 'Usa la misma forma que en "you ___" y "they ___".' },
+        ],
+    },
+};

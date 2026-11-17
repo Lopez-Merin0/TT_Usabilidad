@@ -29,9 +29,9 @@ export const KAWAI_TEXTURES = {
 export const MINIGAME_BACKGROUND = background;
 
 export const KAWAI_STYLES = {
-    header: { fontFamily: KAWAI_FONTS.mali, color: KAWAI_COLORS.textDark, fontSize: '1.25rem', marginBottom: '5px' },
-    instruction: { color: KAWAI_COLORS.textDark, fontSize: '0.8rem', marginBottom: '5px' },
-    word: { fontSize: '1.2rem', color: KAWAI_COLORS.textGreen },
+    header: { fontFamily: KAWAI_FONTS.mali, color: KAWAI_COLORS.textDark, fontSize: '1.4rem', marginBottom: '6px' },
+    instruction: { color: KAWAI_COLORS.textDark, fontSize: '1.05rem', marginBottom: '6px' },
+    word: { fontSize: '1.4rem', color: KAWAI_COLORS.textGreen },
     feedbackCorrect: { fontWeight: 'bold' as 'bold', color: KAWAI_COLORS.textGreen, marginTop: '10px' },
     feedbackIncorrect: { fontWeight: 'bold' as 'bold', color: KAWAI_COLORS.accentRed, marginTop: '10px' },
 };

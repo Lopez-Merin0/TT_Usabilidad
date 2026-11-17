@@ -1,3 +1,4 @@
+import type { QuestionSupport } from '../components/minigame/supportTypes';
 import lapiz from '../assets/Primer-Game/lapiz.png';
 import llave from '../assets/Primer-Game/llave.png';
 import manzana from '../assets/Primer-Game/manzana.png';
@@ -117,3 +118,44 @@ export const MINIGAME_QUESTIONS: MinigameQuestion[] = [
         }
     }
 ];
+
+// Apoyo en español y pistas progresivas por id de pregunta (hallazgos #07 y #08)
+export const MINIGAME_1_SUPPORT: Record<number, QuestionSupport> = {
+    1: {
+        es: {
+            rules: 'Verás el nombre de un objeto. Tu misión es elegir la imagen que corresponde a la palabra.',
+            introTitle: '☕ ¡Bienvenido/a a Word Hunt (Cacería de palabras)!',
+            introGreeting: [
+                '¡Hola! ¡Qué gusto verte en Word Hunt!',
+                '¿Sabías que este lugar empezó como un pequeño arbusto de café silvestre?',
+                'Lo cultivamos con cariño hasta convertirlo en el refugio aromático y lleno de historias que es hoy.',
+                'Antes de relajarte con tu bebida, tengo un pequeño reto para ti. ¡Demuéstranos que conoces nuestros tesoros!',
+            ],
+            correctFeedback: '¡Felicidades, esa es la actitud de un verdadero explorador! ¡La palabra "{word}" es tuya! Sigue disfrutando tu aventura.',
+            wrongAttempt1: '¡Ups! Esa no parece ser la imagen correcta, pero no te preocupes. Tienes una oportunidad más para encontrar la palabra "{word}". ¡Tú puedes!',
+            wrongAttempt2: 'No te rindas. A veces el aroma nos distrae. Lo importante es la experiencia. Cierra esta ventana y sigue disfrutando.',
+            instruction: 'Tu misión: demuestra que reconoces los tesoros de nuestro café. Elige la imagen que corresponde a la palabra de abajo.',
+            questionHeader: 'Encuentra el tesoro: ',
+        },
+        hints: [
+            { en: 'It is something you use to drink coffee or tea.', es: 'Es algo que usas para tomar café o té.' },
+            { en: 'Look for the object with a handle.', es: 'Busca el objeto que tiene asa.' },
+        ],
+    },
+    2: {
+        es: {
+            rules: 'Verás el nombre de un objeto. Tu misión es elegir la imagen que corresponde a la palabra.',
+            introTitle: '☕ ¡Segundo reto!',
+            introGreeting: '¡Excelente! Ahora busquemos el segundo tesoro. ¿Puedes identificar la palabra?',
+            correctFeedback: '¡Perfecto! Completaste todos los retos. ¡Eres todo un experto!',
+            wrongAttempt1: '¡Casi! Tienes una oportunidad más para encontrar "{word}".',
+            wrongAttempt2: 'Está bien; lo importante es aprender. ¡Inténtalo de nuevo!',
+            instruction: 'Segundo reto: elige la imagen que corresponde a la palabra de abajo.',
+            questionHeader: 'Encuentra el tesoro: ',
+        },
+        hints: [
+            { en: 'It is a fruit.', es: 'Es una fruta.' },
+            { en: 'It is red and round, and it grows on trees.', es: 'Es roja y redonda, y crece en los árboles.' },
+        ],
+    },
+};

@@ -11,6 +11,10 @@ interface OptionButtonProps {
     showExitConfirmation: boolean;
     onAnswer: (isCorrect: boolean, selectedId: number) => void;
     onHover: (id: number | null) => void;
+    // Seleccionada pero aún sin confirmar (#14)
+    isPending?: boolean;
+    // Descartada por la segunda pista (#08)
+    isEliminated?: boolean;
 }
 
 const OptionButton: React.FC<OptionButtonProps> = ({
@@ -22,6 +26,8 @@ const OptionButton: React.FC<OptionButtonProps> = ({
     showExitConfirmation,
     onAnswer,
     onHover,
+    isPending = false,
+    isEliminated = false,
 }) => {
     const getButtonStyle = (): React.CSSProperties => {
         let backgroundColor = KAWAI_COLORS.panelLight;
@@ -53,7 +59,7 @@ const OptionButton: React.FC<OptionButtonProps> = ({
             cursor: isAnswered || showExitConfirmation ? 'default' : 'pointer',
             boxShadow,
             fontWeight: 'bold',
-            fontSize: '0.85rem', // Reducido de 0.95rem
+            fontSize: '1.05rem', // #10: antes 0.85rem, difícil de leer
             textAlign: 'center',
             transition: 'all 0.2s ease-in-out',
             transform,
@@ -69,7 +75,9 @@ const OptionButton: React.FC<OptionButtonProps> = ({
             onClick={() => !isAnswered && !showExitConfirmation && onAnswer(option.isCorrect, option.id)}
             onMouseEnter={() => !isAnswered && !showExitConfirmation && onHover(option.id)}
             onMouseLeave={() => !isAnswered && !showExitConfirmation && onHover(null)}
-            disabled={isAnswered || showExitConfirmation}
+            disabled={isAnswered || showExitConfirmation || isEliminated}
+            className={`${isPending && !isAnswered ? 'tt-option-pending' : ''} ${isEliminated && !isAnswered ? 'tt-option-eliminated' : ''}`}
+            aria-pressed={isPending}
             style={getButtonStyle()}
         >
             {option.text}

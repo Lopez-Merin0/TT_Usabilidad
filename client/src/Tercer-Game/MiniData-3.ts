@@ -1,3 +1,4 @@
+import type { QuestionSupport } from '../components/minigame/supportTypes';
 import audio1 from '../assets/Tercer-Game/how-are-you-doing-today.mp3';
 import audio2 from '../assets/Tercer-Game/hello-can-i-help-you.mp3';
 
@@ -126,3 +127,49 @@ export const MINIGAME_3_QUESTIONS: MinigameQuestion[] = [
         }
     }
 ];
+
+// Apoyo en español y pistas progresivas por id de pregunta (hallazgos #07 y #08)
+export const MINIGAME_3_SUPPORT: Record<number, QuestionSupport> = {
+    1: {
+        es: {
+            rules: 'Escucha con atención el audio y elige la oración en inglés correcta.',
+            introTitle: "🍭 El dulce reto de escuchar en 'Sweet Sounds'",
+            introGreeting: [
+                "¡Bienvenido/a! Somos Carlos y Chuy, los anfitriones de 'Sweet Sounds'.",
+                'Te dejamos un saludo cotidiano, pero solo si escuchas con atención.',
+                'Escucha la frase del cliente y elige exactamente lo que oíste.',
+                '¡Veamos si tu oído es más dulce que nuestros dulces!',
+            ],
+            correctFeedback: '¡Excelente oído! Te ganaste un merecido dulce imaginario.',
+            wrongAttempt1: 'Mmm... casi. Escucha otra vez con atención. Te queda un intento.',
+            wrongAttempt2: 'Está bien. Equivocarse es normal.',
+            instruction: 'Presiona el botón para reproducir el audio y elige la oración correcta.',
+            questionHeader: '¿Qué dice el cliente?',
+        },
+        hints: [
+            { en: 'It is a question about how someone feels.', es: 'Es una pregunta sobre cómo se siente alguien.' },
+            { en: 'The sentence ends with "...doing today?"', es: 'La oración termina con "...doing today?"' },
+        ],
+    },
+    2: {
+        es: {
+            rules: 'Escucha con atención la pregunta de atención al cliente y elige la oración que corresponde al audio.',
+            introTitle: "🎤 ¡Reto de audio #2 en 'Sweet Sounds'!",
+            introGreeting: [
+                '¡Vamos muy bien! Carlos y Chuy te dejaron otro audio recién grabado.',
+                'Esta vez es un ofrecimiento amable de ayuda, pero aquí nada es tan fácil como parece.',
+                'Pon atención y presume tu oído de oro.',
+                '¿Listo/a para otra ronda?',
+            ],
+            correctFeedback: '¡Eso es! Tu oído es finísimo.',
+            wrongAttempt1: 'Mmm... cerca. Escucha otra vez con calma. Todavía tienes un intento.',
+            wrongAttempt2: '¡Todo bien! Regresa e inténtalo otra vez.',
+            instruction: 'Presiona el botón para reproducir el audio y elige la pregunta correcta.',
+            questionHeader: '¿Qué escuchaste?',
+        },
+        hints: [
+            { en: 'The person is offering help, not asking for it.', es: 'La persona está ofreciendo ayuda, no pidiéndola.' },
+            { en: 'It starts with a greeting: "Hello, ..."', es: 'Empieza con un saludo: "Hello, ..."' },
+        ],
+    },
+};

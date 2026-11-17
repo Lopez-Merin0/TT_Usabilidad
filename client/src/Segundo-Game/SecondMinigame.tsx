@@ -5,6 +5,18 @@ import ExitConfirmationPopup from './ExitConfirmationPopup';
 import CompletionMessage from './CompletionMessage';
 import OptionButton from './OptionButton';
 import { useMinigameLogic } from './useMinigameLogic';
+import { MINIGAME_2_SUPPORT } from './MiniData-2';
+import {
+    AssistToolbar,
+    CheckAnswerButton,
+    EsText,
+    HintBox,
+    HowToPlayModal,
+    useAnswerSelection,
+    useHowToPlay,
+    useSpanishSupport,
+} from '../components/minigame/MinigameAssist';
+import { HOW_TO_PLAY } from './howToPlay';
 import {
     KAWAI_COLORS,
     KAWAI_FONTS,
@@ -46,6 +58,24 @@ const SecondMinigame: React.FC<SecondMinigameProps> = ({ userName }) => {
         getButtonText,
     } = useMinigameLogic(userName);
 
+    // Apoyos de usabilidad: español (#07), pistas (#08), confirmar respuesta (#14), cómo jugar (#18)
+    const support = currentQuestion ? MINIGAME_2_SUPPORT[currentQuestion.id] : undefined;
+    const [showSpanish, toggleSpanish] = useSpanishSupport();
+    const { showHowTo, openHowTo, closeHowTo } = useHowToPlay('verb-workshop', !showIntro && !allQuestionsCompleted && !showCompletionMessage);
+    const { pendingId, setPendingId, pendingOption, hintsUsed, takeHint, eliminatedId } = useAnswerSelection(
+        currentQuestion?.id,
+        currentQuestion?.options ?? [],
+        isAnswered,
+    );
+    const fillEs = (text: string) => text.replace(/{text}/g, currentQuestion?.options.find((o) => o.id === selectedOptionId)?.text ?? '').replace(/{user}/g, userName);
+    const introEs = support
+        ? (Array.isArray(support.es.introGreeting) ? support.es.introGreeting[currentDialogIndex] ?? '' : support.es.introGreeting)
+        : '';
+    const feedbackEs = support
+        ? fillEs(isCorrectAnswer ? support.es.correctFeedback : attempts < 2 ? support.es.wrongAttempt1 : support.es.wrongAttempt2)
+        : '';
+    const isQuestionPhase = !showStory && !isAnswered;
+
     if (!currentQuestion) return null;
 
     const { sentence, options, rules, dialogue } = currentQuestion;
@@ -78,7 +108,7 @@ const SecondMinigame: React.FC<SecondMinigameProps> = ({ userName }) => {
         left: '50%',
         transform: 'translateX(-50%)',
         width: '90%',
-        maxWidth: '600px',
+        maxWidth: '680px',
         minHeight: '70px',
         padding: '15px 25px',
         backgroundColor: 'rgba(247, 240, 230, 0.8)',
@@ -89,8 +119,8 @@ const SecondMinigame: React.FC<SecondMinigameProps> = ({ userName }) => {
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
-        textAlign: 'left',
-        fontSize: '1rem',
+        textAlign: 'center',
+        fontSize: '1.05rem',
         zIndex: 15,
     };
 
@@ -147,18 +177,22 @@ const SecondMinigame: React.FC<SecondMinigameProps> = ({ userName }) => {
     const introText = (
         <>
             <h3 style={KAWAI_STYLES.header}>{dialogue.introTitle}</h3>
-            <p style={{ color: KAWAI_COLORS.textDark, fontSize: '0.9rem' }}>
+            <EsText show={showSpanish}>{support?.es.introTitle}</EsText>
+            <p style={{ color: KAWAI_COLORS.textDark, fontSize: '1.1rem', lineHeight: 1.45, margin: '6px 0 0' }}>
                 {getCurrentIntroText()}
-                {isLastDialog && (
-                    <>
-                        <br /><br />
-                        Rules: {rules} <br />
-                        Bonus: You have 2 chances to guess.
-                    </>
-                )}
             </p>
-            <p style={{ marginTop: '5px', fontSize: '0.75rem', color: KAWAI_COLORS.textDark }}>
-                Press {buttonText.replace(/\*\*/g, '')} to continue the conversation.
+            <EsText show={showSpanish}>{fillEs(introEs)}</EsText>
+            {isLastDialog && (
+                <div style={{ marginTop: '10px', fontSize: '1.05rem', color: KAWAI_COLORS.textDark }}>
+                    <p style={{ margin: 0 }}><b>Rules:</b> {rules}</p>
+                    <EsText show={showSpanish}>Reglas: {support?.es.rules}</EsText>
+                    <p style={{ margin: '4px 0 0' }}><b>Bonus:</b> You have 2 chances to guess.</p>
+                    <EsText show={showSpanish}>Tienes 2 oportunidades para responder.</EsText>
+                </div>
+            )}
+            <p style={{ marginTop: '8px', fontSize: '0.95rem', color: KAWAI_COLORS.textDark }}>
+                Press <b>{buttonText.replace(/\*\*/g, '')}</b> to continue.
+                {showSpanish && <span className="tt-mg-es"> Presiona el botón para continuar.</span>}
             </p>
         </>
     );
@@ -168,15 +202,18 @@ const SecondMinigame: React.FC<SecondMinigameProps> = ({ userName }) => {
             <p style={KAWAI_STYLES.instruction}>
                 {dialogue.instruction}
             </p>
+            <EsText show={showSpanish}>{support?.es.instruction}</EsText>
             <h3 style={{ margin: 0, color: KAWAI_COLORS.textDark, textAlign: 'center' }}>
                 {dialogue.questionHeader}
                 <span style={KAWAI_STYLES.word}>
                     {sentence.replace('{gap}', '____')}
                 </span>
             </h3>
-            <p style={{ marginTop: '5px', fontSize: '0.75rem', color: KAWAI_COLORS.textDark }}>
-                This is attempt {attempts + 1} of 2!
+            <EsText show={showSpanish}>{support?.es.questionHeader}<b>{sentence.replace('{gap}', '____')}</b></EsText>
+            <p style={{ marginTop: '5px', fontSize: '0.95rem', color: KAWAI_COLORS.textDark }}>
+                Attempt {attempts + 1} of 2{showSpanish ? ` · Intento ${attempts + 1} de 2` : ''}
             </p>
+            <HintBox hints={support?.hints ?? []} used={hintsUsed} showSpanish={showSpanish} />
         </>
     );
 
@@ -222,11 +259,21 @@ const SecondMinigame: React.FC<SecondMinigameProps> = ({ userName }) => {
                     border: `3px solid ${KAWAI_COLORS.panelBorder}`,
                     borderRadius: '15px',
                     fontFamily: KAWAI_FONTS.mali,
-                    fontSize: '0.9rem',
+                    fontSize: '1.05rem',
                     zIndex: 20,
                 }}>
                     Question {currentQuestionIndex + 1} of {MINIGAME_2_QUESTIONS.length}
                 </div>
+
+                <AssistToolbar
+                    showSpanish={showSpanish}
+                    onToggleSpanish={toggleSpanish}
+                    onHowTo={openHowTo}
+                    hintsUsed={hintsUsed}
+                    hintsTotal={support?.hints.length ?? 0}
+                    onHint={takeHint}
+                    canHint={isQuestionPhase && !showExitConfirmation}
+                />
 
                 {!showStory && (
                     <div style={optionsContainerStyle}>
@@ -239,7 +286,9 @@ const SecondMinigame: React.FC<SecondMinigameProps> = ({ userName }) => {
                                 isAnswered={isAnswered}
                                 isCorrectAnswer={isCorrectAnswer}
                                 showExitConfirmation={showExitConfirmation}
-                                onAnswer={handleAnswer}
+                                onAnswer={(_isCorrect: boolean, id: number) => setPendingId(id)}
+                                isPending={pendingId === option.id}
+                                isEliminated={eliminatedId === option.id}
                                 onHover={setHoveredOptionId}
                             />
                         ))}
@@ -249,29 +298,45 @@ const SecondMinigame: React.FC<SecondMinigameProps> = ({ userName }) => {
                 <div style={dialogBoxStyle}>
                     <div>
                         {showStory ? introText : (isAnswered ?
-                            <p style={isCorrectAnswer ? KAWAI_STYLES.feedbackCorrect : KAWAI_STYLES.feedbackIncorrect}>
-                                {feedback}
-                            </p>
+                            <div>
+                                <p style={{ ...(isCorrectAnswer ? KAWAI_STYLES.feedbackCorrect : KAWAI_STYLES.feedbackIncorrect), fontSize: '1.1rem' }}>
+                                    {feedback}
+                                </p>
+                                <EsText show={showSpanish}>{feedbackEs}</EsText>
+                            </div>
                             : questionText)}
                     </div>
 
-                    <button
-                        onClick={handleNext}
-                        disabled={(!showStory && !isAnswered && attempts < 2) || showExitConfirmation}
-                        style={{
-                            ...nextButtonStyle,
-                            backgroundColor: ((!showStory && !isAnswered && attempts < 2) || showExitConfirmation) 
-                                ? KAWAI_COLORS.bgMedium 
-                                : KAWAI_COLORS.accentGreen,
-                            cursor: ((!showStory && !isAnswered && attempts < 2) || showExitConfirmation) 
-                                ? 'default' 
-                                : 'pointer',
-                        }}
-                    >
-                        {buttonText.replace(/\*\*/g, '')}
-                    </button>
+                    {isQuestionPhase ? (
+                        <CheckAnswerButton
+                            disabled={!pendingOption || showExitConfirmation}
+                            onCheck={() => pendingOption && handleAnswer(pendingOption.isCorrect, pendingOption.id)}
+                            style={nextButtonStyle}
+                            showSpanish={showSpanish}
+                        />
+                    ) : (
+                        <button
+                            onClick={handleNext}
+                            disabled={(!showStory && !isAnswered && attempts < 2) || showExitConfirmation}
+                            style={{
+                                ...nextButtonStyle,
+                                backgroundColor: ((!showStory && !isAnswered && attempts < 2) || showExitConfirmation) 
+                                    ? KAWAI_COLORS.bgMedium 
+                                    : KAWAI_COLORS.accentGreen,
+                                cursor: ((!showStory && !isAnswered && attempts < 2) || showExitConfirmation) 
+                                    ? 'default' 
+                                    : 'pointer',
+                            }}
+                        >
+                            {buttonText.replace(/\*\*/g, '')}
+                        </button>
+                    )}
                 </div>
             </div>
+
+            {showHowTo && (
+                <HowToPlayModal {...HOW_TO_PLAY} onClose={closeHowTo} />
+            )}
 
             {showExitConfirmation && (
                 <ExitConfirmationPopup

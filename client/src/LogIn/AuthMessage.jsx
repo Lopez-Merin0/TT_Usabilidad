@@ -26,3 +26,17 @@ export const FieldError = ({ error }) => {
         </div>
     );
 };
+
+// Restricción de un campo, visible antes de enviar (hallazgo #11).
+// state: 'neutral' (aún no escribe), 'ok' (cumple) o 'error' (no cumple)
+export const FieldRule = ({ id, state = 'neutral', en, es }) => {
+    const icon = state === 'ok' ? '✓' : state === 'error' ? '✗' : '•';
+    return (
+        <p id={id} className={`auth-rule auth-rule--${state}`}>
+            <span className="auth-rule__icon" aria-hidden="true">{icon}</span>
+            <span>
+                {en} <span className="auth-rule__es">{es}</span>
+            </span>
+        </p>
+    );
+};

@@ -2,21 +2,35 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../Mundo-Gen/api';
 import { AUTH_MESSAGES, SLOW_SERVER_DELAY_MS, getAuthErrorMessage } from './authMessages';
-import { AuthMessage, FieldError } from './AuthMessage';
+import { AuthMessage, FieldError, FieldRule } from './AuthMessage';
 
-const { registerUser } = api; 
+const { registerUser } = api;
+
+const MIN_PASSWORD_LENGTH = 6;
+const EMAIL_PATTERN = /\S+@\S+\.\S+/;
+
+// Errores de cada campo con los valores actuales (null = sin error)
+const getFieldErrors = ({ username, email, password, confirmPassword }) => ({
+  username: !username.trim() ? AUTH_MESSAGES.usernameEmpty : null,
+  email: !email.trim()
+    ? AUTH_MESSAGES.emailEmpty
+    : !EMAIL_PATTERN.test(email) ? AUTH_MESSAGES.emailInvalid : null,
+  password: !password
+    ? AUTH_MESSAGES.passwordEmpty
+    : password.length < MIN_PASSWORD_LENGTH ? AUTH_MESSAGES.passwordShort : null,
+  confirmPassword: !confirmPassword || password !== confirmPassword ? AUTH_MESSAGES.passwordsDontMatch : null,
+});
 
 const RegisterScreen = () => {
   const navigate = useNavigate();
 
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [values, setValues] = useState({ username: '', email: '', password: '', confirmPassword: '' });
+  // Un campo se valida en cuanto el usuario sale de él (o al intentar enviar)
+  const [touched, setTouched] = useState({});
+  const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const [message, setMessage] = useState(null);
-  const [errors, setErrors] = useState({});
   const slowServerTimer = useRef(null);
   const redirectTimer = useRef(null);
 
@@ -25,46 +39,36 @@ const RegisterScreen = () => {
     clearTimeout(redirectTimer.current);
   }, []);
 
-  const validateForm = () => {
-    let newErrors = {};
-    let isValid = true;
+  const fieldErrors = getFieldErrors(values);
+  const showErrorFor = (name) => (touched[name] || submitted) && fieldErrors[name];
+  const isValid = Object.values(fieldErrors).every((error) => error === null);
 
-    if (!username.trim()) {
-      newErrors.username = AUTH_MESSAGES.usernameEmpty;
-      isValid = false;
-    }
-
-    if (!email.trim()) {
-      newErrors.email = AUTH_MESSAGES.emailEmpty;
-      isValid = false;
-    } else if (!/\S+@\S+\.\S+/.test(email)) {
-      newErrors.email = AUTH_MESSAGES.emailInvalid;
-      isValid = false;
-    }
-
-    if (!password) {
-      newErrors.password = AUTH_MESSAGES.passwordEmpty;
-      isValid = false;
-    } else if (password.length < 6) {
-      newErrors.password = AUTH_MESSAGES.passwordShort;
-      isValid = false;
-    }
-
-    if (password !== confirmPassword) {
-      newErrors.confirmPassword = AUTH_MESSAGES.passwordsDontMatch;
-      isValid = false;
-    }
-
-    setErrors(newErrors);
-    return isValid;
+  const handleChange = (name) => (e) => {
+    setValues((prev) => ({ ...prev, [name]: e.target.value }));
   };
+
+  const handleBlur = (name) => () => {
+    setTouched((prev) => ({ ...prev, [name]: true }));
+  };
+
+  // Estado de cada restricción visible: neutral mientras no ha escrito nada
+  const ruleState = (name, ok) => {
+    if (ok && values[name]) return 'ok';
+    if (touched[name] || submitted) return 'error';
+    return 'neutral';
+  };
+
+  const inputClass = (name) =>
+    `kawaii-input${!fieldErrors[name] && values[name] ? ' is-valid' : ''}`;
 
   const handleRegister = async (event) => {
     event.preventDefault();
     setMessage(null);
-    setErrors({});
+    setSubmitted(true);
 
-    if (!validateForm()) return;
+    if (!isValid) return;
+
+    const { username, email, password } = values;
 
     setLoading(true);
     // En el plan gratuito de Render el backend tarda en despertar
@@ -72,17 +76,17 @@ const RegisterScreen = () => {
     try {
       const userData = { email, username, password };
       console.log('Enviando registro para:', userData.email);
-      
-      const result = await registerUser(userData); 
+
+      const result = await registerUser(userData);
       console.log('Resultado del registro:', result);
-      
+
       clearTimeout(slowServerTimer.current);
       setMessage(AUTH_MESSAGES.registerSuccess);
-      
+
       redirectTimer.current = setTimeout(() => {
         navigate('/login');
       }, 1500);
-      
+
     } catch (error) {
       console.error('Error completo en registro:', error);
       setMessage(getAuthErrorMessage(error, 'register'));
@@ -91,6 +95,8 @@ const RegisterScreen = () => {
       setLoading(false);
     }
   };
+
+  const passwordLength = values.password.length;
 
   return (
     <div className="relative w-full h-screen flex items-center justify-center p-2 sm:p-4">
@@ -104,52 +110,112 @@ const RegisterScreen = () => {
 
           <AuthMessage message={message} />
 
-          <form onSubmit={handleRegister}>
+          <form onSubmit={handleRegister} noValidate>
             <div className="space-y-3 mb-6">
-              <div>
+              <div className="auth-field">
+                <label className="auth-label" htmlFor="register-username">
+                  Username <span className="auth-label__es">Nombre de usuario</span>
+                </label>
                 <input
+                  id="register-username"
                   type="text"
-                  placeholder="Username"
-                  className="kawaii-input w-3/4 mx-auto"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
+                  autoComplete="username"
+                  placeholder="e.g. alex123"
+                  className={inputClass('username')}
+                  value={values.username}
+                  onChange={handleChange('username')}
+                  onBlur={handleBlur('username')}
+                  aria-invalid={Boolean(showErrorFor('username'))}
+                  aria-describedby="register-username-rule"
                 />
-                <FieldError error={errors.username} />
+                <FieldRule
+                  id="register-username-rule"
+                  state={ruleState('username', !fieldErrors.username)}
+                  en="Required. This name appears in the game."
+                  es="Obligatorio. Este nombre aparece en el juego."
+                />
               </div>
 
-              <div>
+              <div className="auth-field">
+                <label className="auth-label" htmlFor="register-email">
+                  Email <span className="auth-label__es">Correo electrónico</span>
+                </label>
                 <input
+                  id="register-email"
                   type="email"
-                  placeholder="Email address"
-                  className="kawaii-input w-3/4 mx-auto"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  autoComplete="email"
+                  placeholder="name@mail.com"
+                  className={inputClass('email')}
+                  value={values.email}
+                  onChange={handleChange('email')}
+                  onBlur={handleBlur('email')}
+                  aria-invalid={Boolean(showErrorFor('email'))}
+                  aria-describedby="register-email-rule"
                 />
-                <FieldError error={errors.email} />
+                {showErrorFor('email') && values.email ? (
+                  <FieldError error={fieldErrors.email} />
+                ) : (
+                  <FieldRule
+                    id="register-email-rule"
+                    state={ruleState('email', !fieldErrors.email)}
+                    en="A valid email, like name@mail.com"
+                    es="Un correo válido, como nombre@correo.com"
+                  />
+                )}
               </div>
 
-              <div>
+              <div className="auth-field">
+                <label className="auth-label" htmlFor="register-password">
+                  Password <span className="auth-label__es">Contraseña</span>
+                </label>
                 <input
+                  id="register-password"
                   type="password"
-                  placeholder="Password (min. 6 characters)"
-                  className="kawaii-input w-3/4 mx-auto"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  autoComplete="new-password"
+                  className={inputClass('password')}
+                  value={values.password}
+                  onChange={handleChange('password')}
+                  onBlur={handleBlur('password')}
+                  aria-invalid={Boolean(showErrorFor('password'))}
+                  aria-describedby="register-password-rule"
                 />
-                <FieldError error={errors.password} />
+                <FieldRule
+                  id="register-password-rule"
+                  state={ruleState('password', !fieldErrors.password)}
+                  en={`At least ${MIN_PASSWORD_LENGTH} characters (${passwordLength}/${MIN_PASSWORD_LENGTH})`}
+                  es={`Mínimo ${MIN_PASSWORD_LENGTH} caracteres`}
+                />
               </div>
 
-              <div>
+              <div className="auth-field">
+                <label className="auth-label" htmlFor="register-confirm">
+                  Confirm password <span className="auth-label__es">Confirma la contraseña</span>
+                </label>
                 <input
+                  id="register-confirm"
                   type="password"
-                  placeholder="Confirm password"
-                  className="kawaii-input w-3/4 mx-auto"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  autoComplete="new-password"
+                  className={inputClass('confirmPassword')}
+                  value={values.confirmPassword}
+                  onChange={handleChange('confirmPassword')}
+                  onBlur={handleBlur('confirmPassword')}
+                  aria-invalid={Boolean(showErrorFor('confirmPassword'))}
+                  aria-describedby="register-confirm-rule"
                 />
-                <FieldError error={errors.confirmPassword} />
+                <FieldRule
+                  id="register-confirm-rule"
+                  state={ruleState('confirmPassword', !fieldErrors.confirmPassword)}
+                  en="Must be the same as the password"
+                  es="Debe ser igual a la contraseña"
+                />
               </div>
             </div>
+
+            {submitted && !isValid && (
+              <p className="auth-rule auth-rule--error" style={{ justifyContent: 'center', marginBottom: '8px' }}>
+                Please fix the fields marked with ✗. <span className="auth-rule__es">Corrige los campos marcados con ✗.</span>
+              </p>
+            )}
 
             <button type="submit" className="kawaii-button w-full text-base py-2" disabled={loading}>
               {loading ? 'Loading...' : 'Sign Up'}

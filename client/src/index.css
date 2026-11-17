@@ -145,21 +145,32 @@ html {
 }
 
 /* enlaces de regresar el registrar */
+/* Hallazgo #12: antes era texto sin fondo ni borde sobre el panel beige y
+   pasaba desapercibido. Ahora tiene fondo claro, borde y subrayado. */
 .kawaii-link-button {
 font-family: 'Comfortaa', cursive;
 font-weight: 700;
-color: var(--kawaii-text-dark);
-padding: 18px 5px;
-border-radius: 10px;
-background-color: transparent;
-border: 1px solid transparent;
+color: #2E2219;
+padding: 8px 12px;
+border-radius: 12px;
+background-color: #FFF8EC;
+border: 2px solid var(--kawaii-panel-border);
+box-shadow: 0 3px 0 var(--kawaii-panel-border);
+text-decoration: underline;
+text-underline-offset: 3px;
+cursor: pointer;
 transition: all 0.2s ease-in-out;
 }
 
 .kawaii-link-button:hover {
-background-color: var(--kawaii-bg-medium);
-border-color: var(--kawaii-panel-border);
-box-shadow: 2px 2px 0px var(--kawaii-shadow-light);
+background-color: #FFFFFF;
+transform: translateY(-2px);
+box-shadow: 0 5px 0 var(--kawaii-panel-border);
+}
+
+.kawaii-link-button:focus-visible {
+outline: 3px solid #3D78B0;
+outline-offset: 2px;
 }
 
 /*animacion */
@@ -268,4 +279,66 @@ box-shadow: 2px 2px 0px var(--kawaii-shadow-light);
 
 .auth-field-error .auth-message__es {
     margin-top: 0;
+}
+
+/* Etiquetas y restricciones visibles del registro (validación en línea) */
+.auth-field {
+    width: 92%;
+    margin: 0 auto;
+    text-align: left;
+}
+
+.auth-label {
+    display: block;
+    margin-bottom: 4px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--kawaii-text-dark);
+}
+
+.auth-label__es {
+    font-weight: 400;
+    font-style: italic;
+    font-size: 0.8rem;
+}
+
+.auth-field .kawaii-input {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.kawaii-input[aria-invalid='true'] {
+    border: 2px solid #C0574F;
+    background-color: #FFF4F3;
+}
+
+.kawaii-input.is-valid {
+    border: 2px solid #5E9C6A;
+}
+
+.auth-rule {
+    display: flex;
+    gap: 6px;
+    align-items: flex-start;
+    margin: 4px 0 0;
+    font-size: 0.78rem;
+    line-height: 1.3;
+}
+
+.auth-rule__icon {
+    font-weight: 700;
+    min-width: 12px;
+}
+
+.auth-rule__es {
+    font-style: italic;
+    opacity: 0.9;
+}
+
+.auth-rule--neutral { color: #5C4A3D; }
+.auth-rule--ok { color: #2F6B3B; }
+.auth-rule--error { color: #A8392F; font-weight: 700; }
+
+.auth-field .auth-field-error {
+    width: 100%;
 }

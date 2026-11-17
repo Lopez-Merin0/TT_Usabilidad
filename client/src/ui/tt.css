@@ -1,0 +1,209 @@
+/* =========================================================================
+   Mejoras de usabilidad (grupo focal + inspección heurística)
+   Clases propias con prefijo tt-. Las utilidades de espaciado/posición de
+   Tailwind (top-4, p-6, etc.) no se aplican en este proyecto, por eso los
+   componentes nuevos usan estas clases.
+   ========================================================================= */
+
+:root {
+  --tt-ink: #3B2F27;
+  --tt-ink-soft: #5C4A3D;
+  --tt-paper: #FFF8EC;
+  --tt-border: #8B7360;
+  --tt-green: #3FAE5A;
+  --tt-green-dark: #2C7F41;
+  --tt-yellow: #FFD54A;
+  --tt-yellow-dark: #C99A00;
+  --tt-pink: #ff69b4;
+  --tt-pink-dark: #c94a8c;
+  --tt-blue: #6FA8DC;
+  --tt-blue-dark: #3D78B0;
+}
+
+/* Texto de apoyo en español: más pequeño y en cursiva */
+.tt-es {
+  font-size: 0.85em;
+  font-style: italic;
+  font-weight: 400;
+  color: var(--tt-ink-soft);
+}
+
+/* ---------- Botones genéricos ---------- */
+.tt-btn {
+  font-family: 'Mali', cursive;
+  font-weight: 700;
+  font-size: 1rem;
+  padding: 10px 18px;
+  border-radius: 16px;
+  border: 3px solid var(--tt-border);
+  cursor: pointer;
+  color: var(--tt-ink);
+  background: var(--tt-paper);
+  box-shadow: 0 4px 0 var(--tt-border);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+}
+.tt-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 6px 0 var(--tt-border); }
+.tt-btn:active:not(:disabled) { transform: translateY(2px); box-shadow: 0 1px 0 var(--tt-border); }
+.tt-btn:disabled { opacity: 0.55; cursor: default; }
+.tt-btn:focus-visible { outline: 3px solid var(--tt-blue-dark); outline-offset: 2px; }
+.tt-btn--primary { background: var(--tt-green); border-color: var(--tt-green-dark); color: #fff; box-shadow: 0 4px 0 var(--tt-green-dark); }
+.tt-btn--primary:hover:not(:disabled) { box-shadow: 0 6px 0 var(--tt-green-dark); }
+.tt-btn--primary .tt-es { color: #EFFFF2; }
+.tt-btn--secondary { background: #DCEBFA; border-color: var(--tt-blue-dark); box-shadow: 0 4px 0 var(--tt-blue-dark); }
+.tt-btn--ghost { background: transparent; border-color: transparent; box-shadow: none; text-decoration: underline; }
+.tt-btn--ghost:hover:not(:disabled) { box-shadow: none; }
+
+/* ---------- Overlay y tarjeta modal ---------- */
+.tt-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: rgba(30, 22, 16, 0.55);
+}
+.tt-card {
+  width: 100%;
+  max-width: 540px;
+  max-height: 92vh;
+  overflow-y: auto;
+  padding: 22px 26px;
+  background: var(--tt-paper);
+  border: 5px solid var(--tt-border);
+  border-radius: 24px;
+  box-shadow: 0 8px 0 var(--tt-border);
+  color: var(--tt-ink);
+  text-align: center;
+  font-family: 'Comfortaa', cursive;
+}
+.tt-card__title { font-family: 'Mali', cursive; font-size: 1.6rem; font-weight: 700; margin: 4px 0 0; }
+.tt-card__subtitle-es { font-size: 1rem; font-style: italic; color: var(--tt-ink-soft); margin: 2px 0 12px; }
+.tt-card__actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 16px; }
+
+/* ---------- Tutorial ---------- */
+.tt-tutorial__counter { font-size: 0.85rem; color: var(--tt-ink-soft); margin: 0; }
+.tt-tutorial__icon { min-height: 90px; display: flex; align-items: center; justify-content: center; margin: 8px 0; }
+.tt-tutorial__emoji { font-size: 4rem; line-height: 1; animation: tt-bounce 1.6s ease-in-out infinite; }
+.tt-tutorial__body { font-size: 1.1rem; line-height: 1.5; margin: 6px 0; }
+.tt-tutorial__body-es { font-size: 0.95rem; line-height: 1.45; font-style: italic; color: var(--tt-ink-soft); margin: 4px 0 10px; }
+.tt-tutorial__dots { display: flex; justify-content: center; gap: 6px; }
+.tt-tutorial__dot { width: 10px; height: 10px; border-radius: 50%; background: #D9C9B6; }
+.tt-tutorial__dot.is-active { background: var(--tt-green); transform: scale(1.25); }
+.tt-tutorial__keys { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.tt-tutorial__keyrow { display: flex; gap: 4px; }
+.tt-tutorial__or { font-size: 0.8rem; margin: 2px 0; color: var(--tt-ink-soft); }
+.tt-key {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 34px; height: 34px; padding: 0 6px;
+  border: 2px solid var(--tt-border); border-bottom-width: 5px; border-radius: 8px;
+  background: #fff; font-family: 'Mali', cursive; font-weight: 700; font-size: 1rem;
+}
+
+/* ---------- Barra superior (cuarto y mapa) ---------- */
+.tt-hud {
+  position: fixed;
+  top: 12px;
+  right: 12px;
+  z-index: 50;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 8px;
+  max-width: calc(100vw - 24px);
+}
+.tt-hud__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'Mali', cursive;
+  font-weight: 700;
+  font-size: 0.95rem;
+  padding: 8px 14px;
+  border-radius: 16px;
+  border: 3px solid var(--tt-border);
+  color: var(--tt-ink);
+  background: var(--tt-paper);
+  box-shadow: 0 4px 0 var(--tt-border);
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.tt-hud__btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 6px 0 var(--tt-border); }
+.tt-hud__btn:disabled { opacity: 0.6; cursor: default; }
+.tt-hud__btn:focus-visible { outline: 3px solid var(--tt-blue-dark); outline-offset: 2px; }
+.tt-hud__btn--map {
+  font-size: 1.15rem;
+  padding: 10px 20px;
+  color: #fff;
+  background: var(--tt-green);
+  border-color: var(--tt-green-dark);
+  box-shadow: 0 4px 0 var(--tt-green-dark);
+  animation: tt-glow 1.8s ease-in-out infinite;
+}
+.tt-hud__btn--map:hover:not(:disabled) { box-shadow: 0 6px 0 var(--tt-green-dark); }
+.tt-hud__btn--progress { background: #FFE58A; border-color: var(--tt-yellow-dark); box-shadow: 0 4px 0 var(--tt-yellow-dark); }
+.tt-hud__btn--help { background: #DCEBFA; border-color: var(--tt-blue-dark); box-shadow: 0 4px 0 var(--tt-blue-dark); }
+.tt-hud__btn--logout { background: #FFD1E6; border-color: var(--tt-pink-dark); box-shadow: 0 4px 0 var(--tt-pink-dark); }
+.tt-hud__meter { width: 48px; height: 10px; border-radius: 6px; background: rgba(255,255,255,0.8); border: 2px solid var(--tt-yellow-dark); overflow: hidden; }
+.tt-hud__meter-fill { display: block; height: 100%; background: var(--tt-green); }
+
+/* ---------- Banner de siguiente objetivo ---------- */
+.tt-goal {
+  position: fixed;
+  left: 12px;
+  top: 12px;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: max-content;
+  max-width: min(480px, calc(100vw - 600px));
+  min-width: 240px;
+  padding: 10px 18px;
+  background: rgba(255, 248, 236, 0.96);
+  border: 3px solid var(--tt-yellow-dark);
+  border-radius: 18px;
+  box-shadow: 0 4px 0 var(--tt-yellow-dark);
+  color: var(--tt-ink);
+  pointer-events: none;
+}
+.tt-goal__icon { font-size: 1.6rem; }
+.tt-goal__text { margin: 0; font-size: 1rem; font-weight: 700; }
+.tt-goal__es { margin: 2px 0 0; font-size: 0.85rem; font-style: italic; color: var(--tt-ink-soft); }
+
+/* ---------- Salida del cuarto ---------- */
+.tt-exit {
+  position: absolute;
+  border: 4px dashed rgba(255, 213, 74, 0.95);
+  border-radius: 18px;
+  background: radial-gradient(ellipse at center, rgba(255, 230, 120, 0.55), rgba(255, 213, 74, 0.1));
+  animation: tt-glow-soft 1.6s ease-in-out infinite;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+.tt-exit__label {
+  margin-top: -18px;
+  padding: 4px 10px;
+  border-radius: 12px;
+  background: var(--tt-yellow);
+  border: 3px solid var(--tt-yellow-dark);
+  font-family: 'Mali', cursive;
+  font-weight: 700;
+  color: var(--tt-ink);
+  white-space: nowrap;
+}
+.tt-exit__label small { font-weight: 400; font-style: italic; }
+
+/* ---------- Animaciones ---------- */
+@keyframes tt-bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+@keyframes tt-float { 0%, 100% { margin-top: 0; } 50% { margin-top: -6px; } }
+@keyframes tt-glow { 0%, 100% { filter: drop-shadow(0 0 0 rgba(63,174,90,0)); } 50% { filter: drop-shadow(0 0 10px rgba(63,174,90,0.95)); } }
+@keyframes tt-glow-soft { 0%, 100% { opacity: 0.6; } 50% { opacity: 1; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .tt-hud__btn--map, .tt-marker--next, .tt-marker--npc, .tt-spot, .tt-exit, .tt-tutorial__emoji { animation: none; }
+}
+

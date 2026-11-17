@@ -11,8 +11,11 @@ import { ROOM_COLLISION_AREAS } from '../Colisiones/RoomCollisionAreas';
 import { WORLD_SPAWN_FROM_ROOM } from '../Colisiones/MiniGameTrigger';
 import '../index.css';
 import roomBackground from '../assets/mundo/cuarto.jpg';
-import ProgressButton from './ProgressButton';
 import ConfirmationPopup from '../components/Popups/ConfirmationPopup';
+import GameHud from '../ui/GameHud';
+import GoalBanner from '../ui/GoalBanner';
+import Tutorial, { hasSeenTutorial } from '../ui/Tutorial';
+import { getOverallProgress } from '../ui/gameProgress';
 
 const ROOM_WIDTH = 500;  
 const ROOM_HEIGHT = 300; 
@@ -26,6 +29,19 @@ const SCALED_SPRITE_SIZE = BASE_SPRITE_SIZE * CHARACTER_SCALE_FACTOR;
 const MOVEMENT_SPEED = 190;
 const DEBUG_MODE = false; // Cambiar a true temporalmente para ver qué pasa
 
+// Zona de la salida del cuarto (pasillo de abajo a la derecha). Al caminar
+// hasta aquí se pregunta si quiere ir al mapa, igual que con GO TO MAP (#13).
+const ROOM_EXIT_ZONE = { xMin: 700, xMax: 850, yMin: 380, yMax: 540 };
+
+const getUserName = (): string => {
+    try {
+        const data = localStorage.getItem('userData');
+        return data ? JSON.parse(data).username || 'Player' : 'Player';
+    } catch {
+        return 'Player';
+    }
+};
+
 interface CharacterState {
     mapX: number;
     mapY: number;
@@ -34,14 +50,6 @@ interface CharacterState {
     isMoving: boolean;
 }
 
-const LogOutIcon = (props: React.SVGProps<SVGSVGElement>) => (
-    <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-        <polyline points="16 17 21 12 16 7"></polyline>
-        <line x1="21" y1="12" x2="9" y2="12"></line>
-    </svg>
-);
-
 const Room: React.FC = () => {
     const navigate = useNavigate();
     const [showLogoutPopup, setShowLogoutPopup] = useState(false);
@@ -49,6 +57,9 @@ const Room: React.FC = () => {
     const [showSleepPopup, setShowSleepPopup] = useState(false);
     const [hasShownSleepPopup, setHasShownSleepPopup] = useState(false);
     const [showIntro, setShowIntro] = useState(true);
+    // El tutorial se muestra solo la primera vez; después se abre con HELP
+    const [showTutorial, setShowTutorial] = useState(() => !hasSeenTutorial());
+    const [hasShownExitPopup, setHasShownExitPopup] = useState(false);
 
     const [viewport, setViewport] = useState({
         width: typeof window !== 'undefined' ? window.innerWidth : 1024,
@@ -137,7 +148,7 @@ const Room: React.FC = () => {
     }, []);
 
     useKeyboardMovement({
-        enabled: !(showIntro || showLogoutPopup || showSleepPopup || showMapPopup),
+        enabled: !(showIntro || showTutorial || showLogoutPopup || showSleepPopup || showMapPopup),
         speed: MOVEMENT_SPEED,
         onMove: moveCharacter,
         onStop: stopCharacter,
@@ -171,9 +182,26 @@ const Room: React.FC = () => {
         }
     }, [characterState.mapX, characterState.mapY, showSleepPopup, hasShownSleepPopup]);
 
+    // Caminar a la puerta abre la misma confirmación que GO TO MAP
+    useEffect(() => {
+        const { mapX, mapY } = characterState;
+        const inExit = mapX >= ROOM_EXIT_ZONE.xMin && mapX <= ROOM_EXIT_ZONE.xMax
+            && mapY >= ROOM_EXIT_ZONE.yMin && mapY <= ROOM_EXIT_ZONE.yMax;
+
+        if (inExit && !hasShownExitPopup && !showMapPopup && !showLogoutPopup && !showSleepPopup) {
+            setShowMapPopup(true);
+            setHasShownExitPopup(true);
+        } else if (!inExit && hasShownExitPopup) {
+            setHasShownExitPopup(false);
+        }
+    }, [characterState.mapX, characterState.mapY, hasShownExitPopup, showMapPopup, showLogoutPopup, showSleepPopup]);
+
     if (showIntro) {
         return <LoadingScreen onAnimationEnd={() => setShowIntro(false)} />;
     }
+
+    const overall = getOverallProgress();
+    const anyPopupOpen = showLogoutPopup || showSleepPopup || showMapPopup || showTutorial;
 
     return (
         <div
@@ -198,6 +226,32 @@ const Room: React.FC = () => {
                     zIndex: 0,
                 }}
             />
+
+            {/* Indicador de la salida (#13) */}
+            <div
+                style={{
+                    position: 'absolute',
+                    left: '50%',
+                    top: '50%',
+                    transform: 'translate(-50%, -50%)',
+                    width: `${MAX_MAP_WIDTH}px`,
+                    height: `${MAX_MAP_HEIGHT}px`,
+                    pointerEvents: 'none',
+                    zIndex: 0,
+                }}
+            >
+                <div
+                    className="tt-exit"
+                    style={{
+                        left: `${ROOM_EXIT_ZONE.xMin}px`,
+                        top: `${ROOM_EXIT_ZONE.yMin}px`,
+                        width: `${ROOM_EXIT_ZONE.xMax - ROOM_EXIT_ZONE.xMin}px`,
+                        height: `${ROOM_EXIT_ZONE.yMax - ROOM_EXIT_ZONE.yMin}px`,
+                    }}
+                >
+                    <span className="tt-exit__label">🚪 EXIT <small>Salida</small></span>
+                </div>
+            </div>
 
             {/* Debug: Mostrar áreas de colisión */}
             {DEBUG_MODE && (
@@ -250,40 +304,26 @@ const Room: React.FC = () => {
                 frame={characterState.frame}
             />
 
-            <div className="fixed top-4 right-4 flex space-x-2" style={{ zIndex: 10 }}>
-                <button
-                    onClick={() => setShowMapPopup(true)}
-                    className="kawaii-button py-1 px-2 flex items-center space-x-1"
-                    style={{
-                        backgroundColor: '#90EE90',
-                        color: '#333333',
-                        border: '3px solid #32CD32',
-                        fontSize: '0.75rem',
-                    }}
-                    disabled={showLogoutPopup || showSleepPopup || showMapPopup}
-                >
-                    <span className="font-bold">GO TO MAP</span>
-                </button>
+            <GameHud
+                disabled={anyPopupOpen}
+                onGoToMap={() => setShowMapPopup(true)}
+                onHelp={() => setShowTutorial(true)}
+                onLogout={() => setShowLogoutPopup(true)}
+            />
 
-                <ProgressButton
-                    disabled={showLogoutPopup || showSleepPopup || showMapPopup}
-                />
-
-                <button
-                    onClick={() => setShowLogoutPopup(true)}
-                    className="kawaii-button py-1 px-2 flex items-center space-x-1"
-                    style={{
-                        backgroundColor: '#ff69b4',
-                        color: 'white',
-                        border: '3px solid #e04e9e',
-                        fontSize: '0.75rem',
-                    }}
-                    disabled={showLogoutPopup || showSleepPopup || showMapPopup}
-                >
-                    <LogOutIcon className="w-3 h-3" />
-                    <span className="font-bold">LOG OUT</span>
-                </button>
-            </div>
+            {!anyPopupOpen && (
+                overall.next ? (
+                    <GoalBanner
+                        text={<>Go to the town map and find <b>{overall.next.name}</b> ⭐</>}
+                        textEs={`Ve al mapa del pueblo y busca ${overall.next.nameEs}. Sal por la puerta (EXIT) o con GO TO MAP.`}
+                    />
+                ) : (
+                    <GoalBanner
+                        text={<>All activities done! Walk to your <b>bed</b> to rest 💤</>}
+                        textEs="¡Completaste todo! Camina a tu cama para descansar."
+                    />
+                )
+            )}
 
             {showMapPopup && (
                 <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
@@ -294,9 +334,10 @@ const Room: React.FC = () => {
                             boxShadow: '0 8px 0 0 #90EE90',
                             maxWidth: '400px',
                         }}>
-                        <p className="text-xl font-bold mb-4" style={{ color: '#333333' }}>
+                        <p className="text-xl font-bold" style={{ color: '#333333', marginBottom: '4px' }}>
                             Do you want to go to the map?
                         </p>
+                        <p className="tt-es" style={{ marginBottom: '16px' }}>¿Quieres ir al mapa del pueblo?</p>
                         <div className="flex justify-center space-x-4">
                             <button
                                 onClick={() => {
@@ -343,6 +384,10 @@ const Room: React.FC = () => {
 
             {showSleepPopup && (
                 <SleepPopup onClose={() => setShowSleepPopup(false)} />
+            )}
+
+            {showTutorial && (
+                <Tutorial userName={getUserName()} onClose={() => setShowTutorial(false)} />
             )}
 
             {DEBUG_MODE && (

@@ -14,6 +14,7 @@ import roomBackground from '../assets/mundo/cuarto.jpg';
 import ConfirmationPopup from '../components/Popups/ConfirmationPopup';
 import GameHud from '../ui/GameHud';
 import GoalBanner from '../ui/GoalBanner';
+import PixelExitSign from '../ui/PixelExitSign';
 import Tutorial, { hasSeenTutorial } from '../ui/Tutorial';
 import { getOverallProgress } from '../ui/gameProgress';
 
@@ -240,17 +241,13 @@ const Room: React.FC = () => {
                     zIndex: 0,
                 }}
             >
-                <div
-                    className="tt-exit"
+                <PixelExitSign
                     style={{
-                        left: `${ROOM_EXIT_ZONE.xMin}px`,
-                        top: `${ROOM_EXIT_ZONE.yMin}px`,
-                        width: `${ROOM_EXIT_ZONE.xMax - ROOM_EXIT_ZONE.xMin}px`,
-                        height: `${ROOM_EXIT_ZONE.yMax - ROOM_EXIT_ZONE.yMin}px`,
+                        left: `${(ROOM_EXIT_ZONE.xMin + ROOM_EXIT_ZONE.xMax) / 2}px`,
+                        bottom: `${MAX_MAP_HEIGHT - ROOM_EXIT_ZONE.yMax + 8}px`,
+                        transform: 'translateX(-50%)',
                     }}
-                >
-                    <span className="tt-exit__label">🚪 EXIT <small>Salida</small></span>
-                </div>
+                />
             </div>
 
             {/* Debug: Mostrar áreas de colisión */}

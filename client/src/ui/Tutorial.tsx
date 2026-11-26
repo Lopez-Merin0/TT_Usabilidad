@@ -5,11 +5,24 @@ import Icon, { IconName } from './Icon';
 // y que se puede volver a abrir en cualquier momento con el botón HELP
 // (hallazgos #04, #05 y #09). Texto en inglés con apoyo en español.
 
-const TUTORIAL_SEEN_KEY = 'tt_tutorial_seen';
+// La marca de "ya vio el tutorial" se guarda por cuenta, no por navegador: así cada
+// cuenta nueva lo ve una vez aunque varias personas usen la misma computadora
+// (por ejemplo, en las pruebas de usabilidad), y quien regresa no lo vuelve a ver.
+const TUTORIAL_SEEN_PREFIX = 'tt_tutorial_seen:';
+
+const tutorialKey = (): string => {
+    try {
+        const data = JSON.parse(localStorage.getItem('userData') || '{}');
+        const who = data.id ?? data._id ?? data.email ?? data.username ?? 'anon';
+        return TUTORIAL_SEEN_PREFIX + String(who);
+    } catch {
+        return TUTORIAL_SEEN_PREFIX + 'anon';
+    }
+};
 
 export const hasSeenTutorial = (): boolean => {
     try {
-        return localStorage.getItem(TUTORIAL_SEEN_KEY) === 'true';
+        return localStorage.getItem(tutorialKey()) === 'true';
     } catch {
         return false;
     }
@@ -17,7 +30,7 @@ export const hasSeenTutorial = (): boolean => {
 
 const markTutorialSeen = () => {
     try {
-        localStorage.setItem(TUTORIAL_SEEN_KEY, 'true');
+        localStorage.setItem(tutorialKey(), 'true');
     } catch {
         // sin almacenamiento: se volverá a mostrar la próxima vez
     }

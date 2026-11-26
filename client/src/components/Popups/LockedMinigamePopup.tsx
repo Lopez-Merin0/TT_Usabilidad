@@ -1,4 +1,5 @@
 import React from 'react';
+import Icon from '../../ui/Icon';
 
 interface LockedMinigamePopupProps {
     message: string;
@@ -14,12 +15,12 @@ const LockedMinigamePopup: React.FC<LockedMinigamePopupProps> = ({ message, onCl
                 boxShadow: '0 8px 0 0 #ff9999',
                 maxWidth: '400px',
             }}>
-            <p className="text-2xl mb-4">🔒</p>
+            <p className="mb-4"><Icon name="candado" size={56} /></p>
             <p className="text-xl font-bold mb-4" style={{ color: '#333333' }}>
                 {message}
             </p>
             <p className="tt-es" style={{ display: 'block', marginBottom: '16px' }}>
-                Esta actividad está bloqueada. Termina primero la actividad marcada con ⭐ en el mapa.
+                Esta actividad está bloqueada. Termina primero la actividad marcada con <Icon name="estrella" /> en el mapa.
             </p>
             <button
                 onClick={onClose}

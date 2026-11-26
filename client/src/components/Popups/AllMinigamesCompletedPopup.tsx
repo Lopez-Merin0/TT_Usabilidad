@@ -1,4 +1,5 @@
 import React from 'react';
+import Icon from '../../ui/Icon';
 
 interface AllMinigamesCompletedPopupProps {
     onGoToRoom: () => void;
@@ -20,7 +21,7 @@ const AllMinigamesCompletedPopup: React.FC<AllMinigamesCompletedPopupProps> = ({
                 You have successfully completed <strong>all three mini-games</strong>.
             </p>
             <p className="text-base mb-6" style={{ color: '#666666', lineHeight: '1.6' }}>
-                It is time to go home, rest, and start a new day full of adventures. 🏠💤
+                It is time to go home, rest, and start a new day full of adventures. <Icon name="casa" /> <Icon name="dormir" />
             </p>
             <button
                 onClick={onGoToRoom}

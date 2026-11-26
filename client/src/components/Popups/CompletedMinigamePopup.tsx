@@ -1,4 +1,5 @@
 import React from 'react';
+import Icon from '../../ui/Icon';
 
 interface CompletedMinigamePopupProps {
     minigameName: string;
@@ -21,7 +22,7 @@ const CompletedMinigamePopup: React.FC<CompletedMinigamePopupProps> = ({ minigam
                 You have completed <strong>{minigameName}</strong> and all its activities.
             </p>
             <p className="tt-es" style={{ display: 'block', marginBottom: '16px' }}>
-                ¡Felicidades! Ya completaste esta actividad. Busca la siguiente ⭐ en el mapa.
+                ¡Felicidades! Ya completaste esta actividad. Busca la siguiente <Icon name="estrella" /> en el mapa.
             </p>
             <button
                 onClick={onClose}

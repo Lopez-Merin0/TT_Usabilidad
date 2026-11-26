@@ -1,5 +1,6 @@
 import React from 'react';
 import { commonSteps, ExampleCheckButton } from '../components/minigame/MinigameAssist';
+import Icon from '../ui/Icon';
 import manzana from '../assets/Primer-Game/manzana.png';
 import llave from '../assets/Primer-Game/llave.png';
 import lapiz from '../assets/Primer-Game/lapiz.png';
@@ -23,7 +24,7 @@ export const HOW_TO_PLAY = {
         </>
     ),
     steps: commonSteps({
-        icon: '📖',
+        icon: <Icon name="libro" size={28} />,
         en: <>Read the English word at the bottom of the screen.</>,
         es: 'Lee la palabra en inglés que aparece abajo.',
     }),

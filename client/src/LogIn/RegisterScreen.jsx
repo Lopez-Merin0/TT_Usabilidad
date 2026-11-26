@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import api from '../Mundo-Gen/api';
 import { AUTH_MESSAGES, SLOW_SERVER_DELAY_MS, getAuthErrorMessage } from './authMessages';
 import { AuthMessage, FieldError, FieldRule } from './AuthMessage';
+import Icon from '../ui/Icon';
 
 const { registerUser } = api;
 
@@ -213,7 +214,10 @@ const RegisterScreen = () => {
 
             {submitted && !isValid && (
               <p className="auth-rule auth-rule--error" style={{ justifyContent: 'center', marginBottom: '8px' }}>
-                Please fix the fields marked with ✗. <span className="auth-rule__es">Corrige los campos marcados con ✗.</span>
+                <span>
+                  Please fix the fields marked with <Icon name="error" size="1.1em" />.{' '}
+                  <span className="auth-rule__es">Corrige los campos marcados con <Icon name="error" size="1.1em" />.</span>
+                </span>
               </p>
             )}
 

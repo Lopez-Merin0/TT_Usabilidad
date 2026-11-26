@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
+import Icon from '../../ui/Icon';
 
 // Apoyos compartidos por los tres minijuegos:
 // - Botón para mostrar apoyo en español sin quitar el inglés (#07)
@@ -75,7 +76,7 @@ export const useHowToPlay = (gameKey: string, ready: boolean) => {
 };
 
 export interface HowToStep {
-    icon: string;
+    icon: React.ReactNode;
     en: React.ReactNode;
     es: string;
 }
@@ -137,17 +138,17 @@ export const HowToPlayModal: React.FC<HowToPlayModalProps> = ({ title, titleEs, 
 export const commonSteps = (first: HowToStep): HowToStep[] => [
     first,
     {
-        icon: '👆',
+        icon: <Icon name="senalar" size={28} />,
         en: <>Click the option you think is correct. <b>You can change it</b> before checking.</>,
         es: 'Haz clic en la opción que creas correcta. Puedes cambiarla antes de comprobar.',
     },
     {
-        icon: '✔️',
+        icon: <Icon name="correcto" size={28} />,
         en: <>Press <b>CHECK ANSWER</b> to confirm. You have 2 attempts per question.</>,
         es: 'Presiona CHECK ANSWER para confirmar. Tienes 2 intentos por pregunta.',
     },
     {
-        icon: '💡',
+        icon: <Icon name="pista" size={28} />,
         en: <>Stuck? Press <b>Hint</b> (up to 2 per question). Press <b>Español</b> to see Spanish help.</>,
         es: '¿Atorado? Presiona Hint para una pista (hasta 2 por pregunta). Presiona Español para ver apoyo en español.',
     },
@@ -155,7 +156,7 @@ export const commonSteps = (first: HowToStep): HowToStep[] => [
 
 // Recuadro falso de "CHECK ANSWER" para los ejemplos
 export const ExampleCheckButton: React.FC = () => (
-    <span className="tt-howto__mock-check">✔ CHECK ANSWER</span>
+    <span className="tt-howto__mock-check"><Icon name="correcto" /> CHECK ANSWER</span>
 );
 
 /* ------------------------------------------------------- Barra de apoyos */
@@ -187,7 +188,7 @@ export const AssistToolbar: React.FC<AssistToolbarProps> = ({
             disabled={!canHint || hintsUsed >= hintsTotal}
             title="Get a hint / Pedir una pista"
         >
-            💡 Hint {hintsUsed}/{hintsTotal}
+            <Icon name="pista" size="1.4em" /> Hint {hintsUsed}/{hintsTotal}
         </button>
         <button
             type="button"
@@ -196,7 +197,7 @@ export const AssistToolbar: React.FC<AssistToolbarProps> = ({
             aria-pressed={showSpanish}
             title="Show Spanish help / Mostrar apoyo en español"
         >
-            🌎 Español {showSpanish ? 'ON' : 'OFF'}
+            <Icon name="idioma" size="1.4em" /> Español {showSpanish ? 'ON' : 'OFF'}
         </button>
         <button
             type="button"
@@ -204,7 +205,7 @@ export const AssistToolbar: React.FC<AssistToolbarProps> = ({
             onClick={onHowTo}
             title="How to play / Cómo jugar"
         >
-            ❓ How to play
+            <Icon name="libro" size="1.4em" /> How to play
         </button>
     </div>
 );
@@ -217,7 +218,7 @@ export const HintBox: React.FC<{ hints: Bilingual[]; used: number; showSpanish: 
         <div className="tt-hintbox" role="status" aria-live="polite">
             {hints.slice(0, used).map((hint, i) => (
                 <p key={i} className="tt-hintbox__item">
-                    <b>💡 Hint {i + 1}:</b> {hint.en}
+                    <b><Icon name="pista" /> Hint {i + 1}:</b> {hint.en}
                     {showSpanish && <span className="tt-mg-es"> {hint.es}</span>}
                 </p>
             ))}
@@ -295,7 +296,7 @@ export const CheckAnswerButton: React.FC<CheckAnswerButtonProps> = ({ disabled, 
                 cursor: disabled ? 'default' : 'pointer',
             }}
         >
-            ✔ Check answer
+            <Icon name="correcto" style={{ marginRight: '6px' }} />Check answer
         </button>
     </div>
 );

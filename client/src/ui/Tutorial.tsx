@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import Icon, { IconName } from './Icon';
 
 // Tutorial breve que aparece la primera vez que el jugador entra al cuarto
 // y que se puede volver a abrir en cualquier momento con el botón HELP
@@ -31,12 +32,16 @@ interface Step {
     title: string;
     titleEs: string;
     body: React.ReactNode;
-    bodyEs: string;
+    bodyEs: React.ReactNode;
 }
+
+const BigIcon: React.FC<{ name: IconName }> = ({ name }) => (
+    <Icon name={name} size={84} className="tt-tutorial__img" />
+);
 
 const buildSteps = (userName: string): Step[] => [
     {
-        icon: <span className="tt-tutorial__emoji">👋</span>,
+        icon: <BigIcon name="saludo" />,
         title: `Welcome to Talkie Town, ${userName}!`,
         titleEs: '¡Bienvenido/a a Talkie Town!',
         body: 'You will practice English by exploring the town and completing 3 activities: Word Hunt, Verb Workshop and Sweet Sounds.',
@@ -58,36 +63,36 @@ const buildSteps = (userName: string): Step[] => [
         bodyEs: 'Mantén presionadas las flechas o W A S D para caminar. También puedes moverte en diagonal.',
     },
     {
-        icon: <span className="tt-tutorial__emoji">🚪</span>,
+        icon: <BigIcon name="salir" />,
         title: 'Leave your room',
         titleEs: 'Sal de tu cuarto',
         body: (
-            <>Walk to the glowing <b>EXIT</b> door, or press the green <b>🗺️ GO TO MAP</b> button at the top.</>
+            <>Walk to the <b>EXIT</b> door, or press the green <b><Icon name="mapa" /> GO TO MAP</b> button at the top.</>
         ),
-        bodyEs: 'Camina a la puerta que brilla (EXIT) o presiona el botón verde GO TO MAP de arriba.',
+        bodyEs: 'Camina a la puerta de salida (EXIT) o presiona el botón verde GO TO MAP de arriba.',
     },
     {
-        icon: <span className="tt-tutorial__emoji">⭐</span>,
+        icon: <BigIcon name="estrella" />,
         title: 'Find the activities',
         titleEs: 'Encuentra las actividades',
         body: (
-            <>Houses with a <b>⭐ star</b> have an activity. Follow the <b>yellow arrow 🎯</b> to your next one and walk to the glowing door to enter. Activities unlock in order.</>
+            <>Houses with a <b><Icon name="estrella" /> star</b> have an activity. Follow the <b>yellow arrow <Icon name="flecha" /></b> to your next one and walk to the glowing door to enter. Activities unlock in order.</>
         ),
         bodyEs: 'Las casas con estrella tienen una actividad. Sigue la flecha amarilla hacia la siguiente y camina a la puerta que brilla para entrar. Se desbloquean en orden.',
     },
     {
-        icon: <span className="tt-tutorial__emoji">💬</span>,
+        icon: <BigIcon name="dialogo" />,
         title: 'Talk to the animals',
         titleEs: 'Habla con los animales',
-        body: 'Animals with a 💬 bubble give you tips to learn English. Walk next to them to talk.',
-        bodyEs: 'Los animales con una burbuja 💬 te dan consejos. Camina junto a ellos para hablar.',
+        body: <>Animals with a <Icon name="dialogo" /> bubble give you tips to learn English. Walk next to them to talk.</>,
+        bodyEs: <>Los animales con una burbuja <Icon name="dialogo" /> te dan consejos. Camina junto a ellos para hablar.</>,
     },
     {
-        icon: <span className="tt-tutorial__emoji">❓</span>,
+        icon: <BigIcon name="ayuda" />,
         title: 'Need help?',
         titleEs: '¿Necesitas ayuda?',
         body: (
-            <><b>PROGRESS</b> shows how much you have completed. <b>? HELP</b> opens this guide again. <b>🔊 Sound</b> (bottom right) changes music and voice volume.</>
+            <><b><Icon name="trofeo" /> PROGRESS</b> shows how much you have completed. <b><Icon name="ayuda" /> HELP</b> opens this guide again. <b><Icon name="sonido" /> Sound</b> (bottom right) changes music and voice volume.</>
         ),
         bodyEs: 'PROGRESS muestra tu avance. HELP abre esta guía otra vez. Sound (abajo a la derecha) cambia el volumen de música y voces.',
     },

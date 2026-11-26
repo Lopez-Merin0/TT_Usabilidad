@@ -9,6 +9,7 @@ import NPCDialoguePopup from '../NPC/NPCDialoguePopup';
 import { NPC_LIST, NPCDialogue } from '../NPC/NPCConfig';
 import GameHud from '../ui/GameHud';
 import GoalBanner from '../ui/GoalBanner';
+import Icon from '../ui/Icon';
 import Tutorial from '../ui/Tutorial';
 import WorldGuides from '../ui/WorldGuides';
 import { getOverallProgress } from '../ui/gameProgress';
@@ -409,12 +410,12 @@ const WorldScreen: React.FC = () => {
             {!isAnyPopupOpen && (
                 nextGame ? (
                     <GoalBanner
-                        text={<>Next: <b>⭐ {nextGame.name}</b> in the {nextGame.houseEn}. Follow the yellow arrow ➤</>}
+                        text={<>Next: <b><Icon name="estrella" /> {nextGame.name}</b> in the {nextGame.houseEn}. Follow the yellow arrow <Icon name="flecha" /></>}
                         textEs={`Siguiente: ${nextGame.nameEs}, en la ${nextGame.houseEs}. Sigue la flecha amarilla y camina a la puerta que brilla.`}
                     />
                 ) : (
                     <GoalBanner
-                        text={<>All activities done! Go back to <b>🏠 My Room</b> to rest.</>}
+                        text={<>All activities done! Go back to <b><Icon name="casa" /> My Room</b> to rest.</>}
                         textEs="¡Completaste todas las actividades! Regresa a tu casa (My Room) para descansar."
                     />
                 )

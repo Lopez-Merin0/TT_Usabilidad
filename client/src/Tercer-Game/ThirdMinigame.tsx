@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
 import { useVoiceAudio } from './useVoiceAudio';
+import Icon from '../ui/Icon';
 import { MINIGAME_3_QUESTIONS, Option } from './MiniData-3';
 import LoadingScreen from '../LogIn/LoadingScreen';
 import ExitConfirmationPopup from './ExitConfirmationPopup';
@@ -240,7 +241,7 @@ const ThirdMinigame: React.FC<ThirdMinigameProps> = ({ userName }) => {
                     disabled={isAnswered}
                     aria-label="Play the audio"
                 >
-                    {isPlaying ? '🔁 Play again' : '🔊 Play'}
+                    <Icon name="sonido" size="1.3em" /> {isPlaying ? 'Play again' : 'Play'}
                 </button>
                 <button
                     type="button"
@@ -249,10 +250,10 @@ const ThirdMinigame: React.FC<ThirdMinigameProps> = ({ userName }) => {
                     disabled={isAnswered}
                     aria-label="Play the audio slowly"
                 >
-                    🐢 Slow
+                    <Icon name="tortuga" size="1.3em" /> Slow
                 </button>
                 <label htmlFor="tt-voice-volume-game">
-                    🗣️ Volume
+                    <Icon name="audifonos" size="1.3em" /> Volume
                     <input
                         id="tt-voice-volume-game"
                         type="range"

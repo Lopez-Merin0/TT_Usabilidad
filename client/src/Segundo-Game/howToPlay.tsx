@@ -1,5 +1,6 @@
 import React from 'react';
 import { commonSteps, ExampleCheckButton } from '../components/minigame/MinigameAssist';
+import Icon from '../ui/Icon';
 
 // Ejemplo demostrativo antes de jugar Verb Workshop (#18). Usa una oración que
 // no está en las preguntas reales para no dar la respuesta.
@@ -17,12 +18,12 @@ export const HOW_TO_PLAY = {
             </div>
             <ExampleCheckButton />
             <p className="tt-howto__prompt" style={{ marginTop: '8px', fontSize: '0.95rem' }}>
-                ✅ <b>I am happy.</b> <span className="tt-es">(Yo estoy feliz.)</span>
+                <Icon name="correcto" /> <b>I am happy.</b> <span className="tt-es">(Yo estoy feliz.)</span>
             </p>
         </>
     ),
     steps: commonSteps({
-        icon: '📖',
+        icon: <Icon name="libro" size={28} />,
         en: <>Read the sentence and find the missing word (<b>____</b>).</>,
         es: 'Lee la oración y encuentra la palabra que falta (____).',
     }),

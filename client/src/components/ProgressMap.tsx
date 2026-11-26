@@ -3,6 +3,7 @@ import cafeImage from '../assets/mundo/mini1.jpeg';
 import gramaticaImage from '../assets/mundo/mini2.jpeg';
 import carameloImage from '../assets/mundo/mini3.jpeg';
 import { getOverallProgress, MINIGAMES } from '../ui/gameProgress';
+import Icon from '../ui/Icon';
 
 interface MinigameProgress {
     completedQuestions: number[];
@@ -97,7 +98,7 @@ const ProgressMap: React.FC<ProgressMapProps> = ({ onClose }) => {
                     </p>
                     {overall.next && (
                         <p className="tt-progress__next">
-                            🎯 Next: <b>{overall.next.name}</b> in the {overall.next.houseEn}.
+                            <Icon name="objetivo" /> Next: <b>{overall.next.name}</b> in the {overall.next.houseEn}.
                             <span className="tt-es"> Siguiente: {overall.next.nameEs}, en la {overall.next.houseEs}.</span>
                         </p>
                     )}
@@ -130,13 +131,13 @@ const ProgressMap: React.FC<ProgressMapProps> = ({ onClose }) => {
                                 {minigame1Completed}/2
                             </div>
                             <p className="text-xs mt-2 font-semibold" style={{ color: '#4A3C32' }}>
-                                {minigame1Completed >= 2 ? 'Completed! ✓' : 'In progress...'}
+                                {minigame1Completed >= 2 ? <>Completed! <Icon name="correcto" /></> : 'In progress...'}
                             </p>
                         </div>
                     </div>
 
-                    <div className="text-5xl" style={{ color: isMinigame2Unlocked ? '#8B7360' : '#ccc', fontWeight: 'bold' }}>
-                        ➜
+                    <div aria-hidden="true" style={{ opacity: isMinigame2Unlocked ? 1 : 0.35, filter: isMinigame2Unlocked ? 'none' : 'grayscale(1)' }}>
+                        <Icon name="flecha" size={44} />
                     </div>
 
                     <div className="flex flex-col items-center">
@@ -164,13 +165,13 @@ const ProgressMap: React.FC<ProgressMapProps> = ({ onClose }) => {
                                 {minigame2Completed}/2
                             </div>
                             <p className="text-xs mt-2 font-semibold" style={{ color: '#4A3C32' }}>
-                                {!isMinigame2Unlocked ? 'Locked' : minigame2Completed >= 2 ? 'Completed! ✓' : 'In progress...'}
+                                {!isMinigame2Unlocked ? 'Locked' : minigame2Completed >= 2 ? <>Completed! <Icon name="correcto" /></> : 'In progress...'}
                             </p>
                         </div>
                     </div>
 
-                    <div className="text-5xl" style={{ color: isMinigame3Unlocked ? '#8B7360' : '#ccc', fontWeight: 'bold' }}>
-                        ➜
+                    <div aria-hidden="true" style={{ opacity: isMinigame3Unlocked ? 1 : 0.35, filter: isMinigame3Unlocked ? 'none' : 'grayscale(1)' }}>
+                        <Icon name="flecha" size={44} />
                     </div>
 
                     <div className="flex flex-col items-center">
@@ -198,7 +199,7 @@ const ProgressMap: React.FC<ProgressMapProps> = ({ onClose }) => {
                                 {minigame3Completed}/2
                             </div>
                             <p className="text-xs mt-2 font-semibold" style={{ color: '#4A3C32' }}>
-                                {!isMinigame3Unlocked ? 'Locked' : minigame3Completed >= 2 ? 'Completed! ✓' : 'In progress...'}
+                                {!isMinigame3Unlocked ? 'Locked' : minigame3Completed >= 2 ? <>Completed! <Icon name="correcto" /></> : 'In progress...'}
                             </p>
                         </div>
                     </div>

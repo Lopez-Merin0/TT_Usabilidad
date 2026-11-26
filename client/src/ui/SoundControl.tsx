@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { getVoiceVolume, setVoiceVolume, VOICE_VOLUME_EVENT } from './audioSettings';
+import Icon from './Icon';
 
 interface SoundControlProps {
     isMusicEnabled: boolean;
@@ -33,7 +34,7 @@ const SoundControl: React.FC<SoundControlProps> = ({
                     <p className="tt-sound__title">Sound <span className="tt-es">Sonido</span></p>
 
                     <label className="tt-sound__label" htmlFor="tt-music-volume">
-                        🎵 Music <span className="tt-es">Música</span>: {isMusicEnabled ? `${Math.round(musicVolume * 100)}%` : 'OFF'}
+                        <Icon name="musica" /> Music <span className="tt-es">Música</span>: {isMusicEnabled ? `${Math.round(musicVolume * 100)}%` : 'OFF'}
                     </label>
                     <input
                         id="tt-music-volume"
@@ -46,11 +47,13 @@ const SoundControl: React.FC<SoundControlProps> = ({
                         onChange={(e) => onMusicVolumeChange(parseFloat(e.target.value))}
                     />
                     <button type="button" className="tt-sound__mute" onClick={onToggleMusic}>
-                        {isMusicEnabled ? '🔇 Mute music / Silenciar' : '🔊 Turn music on / Activar'}
+                        {isMusicEnabled
+                            ? <><Icon name="silencio" /> Mute music / Silenciar</>
+                            : <><Icon name="sonido" /> Turn music on / Activar</>}
                     </button>
 
                     <label className="tt-sound__label" htmlFor="tt-voice-volume">
-                        🗣️ Voices <span className="tt-es">Voces</span>: {Math.round(voiceVolume * 100)}%
+                        <Icon name="audifonos" /> Voices <span className="tt-es">Voces</span>: {Math.round(voiceVolume * 100)}%
                     </label>
                     <input
                         id="tt-voice-volume"
@@ -74,7 +77,7 @@ const SoundControl: React.FC<SoundControlProps> = ({
                 aria-expanded={open}
                 title="Sound settings / Ajustes de sonido"
             >
-                <span aria-hidden="true">{isMusicEnabled ? '🔊' : '🔇'}</span>
+                <Icon name={isMusicEnabled ? 'sonido' : 'silencio'} size="1.4em" />
                 <span>Sound</span>
             </button>
         </div>

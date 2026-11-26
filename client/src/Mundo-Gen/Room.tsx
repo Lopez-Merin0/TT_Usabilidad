@@ -14,6 +14,7 @@ import roomBackground from '../assets/mundo/cuarto.jpg';
 import ConfirmationPopup from '../components/Popups/ConfirmationPopup';
 import GameHud from '../ui/GameHud';
 import GoalBanner from '../ui/GoalBanner';
+import Icon from '../ui/Icon';
 import PixelExitSign from '../ui/PixelExitSign';
 import Tutorial, { hasSeenTutorial } from '../ui/Tutorial';
 import { getOverallProgress } from '../ui/gameProgress';
@@ -311,12 +312,12 @@ const Room: React.FC = () => {
             {!anyPopupOpen && (
                 overall.next ? (
                     <GoalBanner
-                        text={<>Go to the town map and find <b>{overall.next.name}</b> ⭐</>}
+                        text={<>Go to the town map and find <b>{overall.next.name}</b> <Icon name="estrella" /></>}
                         textEs={`Ve al mapa del pueblo y busca ${overall.next.nameEs}. Sal por la puerta (EXIT) o con GO TO MAP.`}
                     />
                 ) : (
                     <GoalBanner
-                        text={<>All activities done! Walk to your <b>bed</b> to rest 💤</>}
+                        text={<>All activities done! Walk to your <b>bed</b> to rest <Icon name="dormir" /></>}
                         textEs="¡Completaste todo! Camina a tu cama para descansar."
                     />
                 )

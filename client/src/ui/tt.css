@@ -85,7 +85,7 @@
 /* ---------- Tutorial ---------- */
 .tt-tutorial__counter { font-size: 0.85rem; color: var(--tt-ink-soft); margin: 0; }
 .tt-tutorial__icon { min-height: 90px; display: flex; align-items: center; justify-content: center; margin: 8px 0; }
-.tt-tutorial__emoji { font-size: 4rem; line-height: 1; animation: tt-bounce 1.6s ease-in-out infinite; }
+.tt-tutorial__img { animation: tt-bounce 1.6s ease-in-out infinite; }
 .tt-tutorial__body { font-size: 1.1rem; line-height: 1.5; margin: 6px 0; }
 .tt-tutorial__body-es { font-size: 0.95rem; line-height: 1.45; font-style: italic; color: var(--tt-ink-soft); margin: 4px 0 10px; }
 .tt-tutorial__dots { display: flex; justify-content: center; gap: 6px; }
@@ -145,7 +145,16 @@
 .tt-hud__btn--map:hover:not(:disabled) { box-shadow: 0 6px 0 var(--tt-green-dark); }
 .tt-hud__btn--progress { background: #FFE58A; border-color: var(--tt-yellow-dark); box-shadow: 0 4px 0 var(--tt-yellow-dark); }
 .tt-hud__btn--help { background: #DCEBFA; border-color: var(--tt-blue-dark); box-shadow: 0 4px 0 var(--tt-blue-dark); }
-.tt-hud__btn--logout { background: #FFD1E6; border-color: var(--tt-pink-dark); box-shadow: 0 4px 0 var(--tt-pink-dark); }
+/* LOG OUT en rojo, como el botón de salida del paquete Cozy UI: relleno rojo,
+   franja más oscura abajo y contorno café. Rojo oscuro para que el texto blanco
+   tenga contraste suficiente. */
+.tt-hud__btn--logout {
+  background: #D03E44;
+  color: #fff;
+  border-color: #6B2B25;
+  box-shadow: inset 0 -4px 0 #A92E35, 0 4px 0 #6B2B25;
+}
+.tt-hud__btn--logout:hover:not(:disabled) { box-shadow: inset 0 -4px 0 #A92E35, 0 6px 0 #6B2B25; }
 .tt-hud__meter { width: 48px; height: 10px; border-radius: 6px; background: rgba(255,255,255,0.8); border: 2px solid var(--tt-yellow-dark); overflow: hidden; }
 .tt-hud__meter-fill { display: block; height: 100%; background: var(--tt-green); }
 
@@ -287,10 +296,8 @@
   position: absolute;
   pointer-events: none;
   z-index: 3;
-  font-size: 24px;
-  line-height: 1;
-  color: var(--tt-yellow);
-  text-shadow: 0 0 2px #6b4f00, 0 0 2px #6b4f00, 0 0 6px rgba(0,0,0,0.6);
+  line-height: 0;
+  filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.45));
 }
 
 /* ---------- Animaciones ---------- */
@@ -300,7 +307,7 @@
 @keyframes tt-glow-soft { 0%, 100% { opacity: 0.6; } 50% { opacity: 1; } }
 
 @media (prefers-reduced-motion: reduce) {
-  .tt-hud__btn--map, .tt-marker--next, .tt-marker--npc, .tt-spot, .tt-tutorial__emoji { animation: none; }
+  .tt-hud__btn--map, .tt-marker--next, .tt-marker--npc, .tt-spot, .tt-tutorial__img { animation: none; }
   /* La flecha de EXIT sigue animada a propósito para que siempre se note la salida */
 }
 
@@ -327,6 +334,9 @@ span.tt-mg-es { display: inline; }
   max-width: calc(100vw - 420px);
 }
 .tt-assist__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   font-family: 'Mali', cursive;
   font-weight: 700;
   font-size: 1rem;
@@ -436,9 +446,22 @@ span.tt-mg-es { display: inline; }
 .tt-audio-controls label { font-size: 0.9rem; font-weight: 700; display: inline-flex; align-items: center; gap: 6px; }
 .tt-audio-controls input[type='range'] { width: 110px; accent-color: #3FAE5A; cursor: pointer; }
 .tt-audio-btn {
+  display: inline-flex; align-items: center; gap: 6px;
   font-family: 'Mali', cursive; font-weight: 700; font-size: 1rem;
   padding: 8px 14px; border-radius: 16px; border: 3px solid #8B7360;
   background: #FFC0CB; color: #4A3C32; box-shadow: 0 4px 0 #8B7360; cursor: pointer;
 }
 .tt-audio-btn--slow { background: #DCEBFA; }
 .tt-audio-btn:disabled { opacity: 0.55; cursor: default; }
+
+/* ---------- Íconos propios (v3) ---------- */
+/* Reemplazan a los emojis, que se veían distinto en cada sistema. Ver ui/Icon.tsx. */
+.tt-icon {
+  display: inline-block;
+  vertical-align: -0.28em;
+  flex-shrink: 0;
+  pointer-events: none;
+  user-select: none;
+}
+.tt-sound__mute { display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
+.tt-howto__step-icon { line-height: 0; padding-top: 2px; }

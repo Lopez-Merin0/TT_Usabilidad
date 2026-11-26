@@ -2,6 +2,7 @@ import React from 'react';
 import { TRIGGER_AREAS } from '../Colisiones/MiniGameTrigger';
 import { NPC_TRIGGER_AREAS } from '../NPC/NPCTriggerAreas';
 import { getOverallProgress, MinigameKey } from './gameProgress';
+import Icon from './Icon';
 
 // Indicadores visuales sobre el mapa del pueblo:
 // - Casas con minijuego: etiqueta con estado (⭐ siguiente, ✅ completado, 🔒 bloqueado) (#15)
@@ -82,7 +83,7 @@ const WorldGuides: React.FC<WorldGuidesProps> = ({ translateX: tx, translateY: t
                 const c = center(area);
                 const isNext = progress.next?.key === game.key;
                 const variant = game.isCompleted ? 'done' : isNext ? 'next' : 'locked';
-                const icon = game.isCompleted ? '✅' : isNext ? '⭐' : '🔒';
+                const icon = <Icon name={game.isCompleted ? 'correcto' : isNext ? 'estrella' : 'candado'} />;
                 return (
                     <React.Fragment key={game.key}>
                         <Spot area={area} tx={tx} ty={ty} variant={variant === 'locked' ? 'locked' : undefined} />
@@ -100,7 +101,7 @@ const WorldGuides: React.FC<WorldGuidesProps> = ({ translateX: tx, translateY: t
                 y={TRIGGER_AREAS.RoomMinigame.yMin + ty - LABEL_GAP}
                 variant={allDone ? 'next' : 'home'}
             >
-                🏠 My Room{allDone ? ' 💤' : ''}
+                <Icon name="casa" /> My Room{allDone && <Icon name="dormir" />}
             </Marker>
 
             {/* Animales con consejos */}
@@ -115,7 +116,7 @@ const WorldGuides: React.FC<WorldGuidesProps> = ({ translateX: tx, translateY: t
                 return (
                     <React.Fragment key={npc.npcId}>
                         <Spot area={area} tx={tx} ty={ty} variant="npc" />
-                        <Marker x={c.x + tx} y={area.yMin + ty - 2} variant="npc">💬</Marker>
+                        <Marker x={c.x + tx} y={area.yMin + ty - 2} variant="npc"><Icon name="dialogo" size={22} /></Marker>
                     </React.Fragment>
                 );
             })}
@@ -131,7 +132,7 @@ const WorldGuides: React.FC<WorldGuidesProps> = ({ translateX: tx, translateY: t
                         transform: `translate(-50%, -50%) rotate(${angle}rad)`,
                     }}
                 >
-                    ➤
+                    <Icon name="flecha" size={34} />
                 </div>
             )}
         </>

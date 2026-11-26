@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import ProgressMap from '../components/ProgressMap';
 import { getOverallProgress } from '../ui/gameProgress';
+import Icon from '../ui/Icon';
 
 interface ProgressButtonProps {
     disabled?: boolean;
@@ -19,6 +20,7 @@ const ProgressButton: React.FC<ProgressButtonProps> = ({ disabled = false }) => 
                 disabled={disabled}
                 title="See your progress / Ver tu progreso"
             >
+                <Icon name="trofeo" size="1.4em" />
                 <span>PROGRESS</span>
                 <span className="tt-hud__meter" aria-hidden="true">
                     <span className="tt-hud__meter-fill" style={{ width: `${percent}%` }} />

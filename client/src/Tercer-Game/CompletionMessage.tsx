@@ -1,4 +1,5 @@
 import React from 'react';
+import Icon from '../ui/Icon';
 import { KAWAI_COLORS, KAWAI_TEXTURES, MINIGAME_BACKGROUND, KAWAI_FONTS, KAWAI_STYLES } from './minigame-styles';
 
 interface CompletionMessageProps {
@@ -81,7 +82,7 @@ const CompletionMessage: React.FC<CompletionMessageProps> = ({
                 textAlign: 'center',
             }}>
                 <h2 style={{ ...KAWAI_STYLES.header, fontSize: '1.5rem', marginBottom: '15px' }}>
-                    🎉 Congratulations! 🎉
+                    <Icon name="fiesta" size="1.4em" /> Congratulations! <Icon name="fiesta" size="1.4em" style={{ transform: 'scaleX(-1)' }} />
                 </h2>
                 <p style={{ color: KAWAI_COLORS.textDark, fontSize: '1rem', marginBottom: '10px' }}>
                     {allQuestionsCompleted && !showCompletionMessage

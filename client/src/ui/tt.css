@@ -465,3 +465,63 @@ span.tt-mg-es { display: inline; }
 }
 .tt-sound__mute { display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
 .tt-howto__step-icon { line-height: 0; padding-top: 2px; }
+
+/* ---------- Íconos Garden: contraste y animación de botones ---------- */
+/* En los botones oscuros (verde y rojo) el glifo ciruela no contrasta: va sobre una
+   ficha crema con borde ciruela, como los botones del paquete. (Un filtro blanco
+   borraba los detalles interiores del glifo.) */
+.tt-hud__btn--map .tt-icon,
+.tt-hud__btn--logout .tt-icon {
+  box-sizing: content-box;
+  padding: 3px;
+  background: #FFF7E4;
+  border: 2px solid #745573;
+  border-radius: 9px;
+}
+
+/* Al presionar, el botón se hunde un poco */
+.tt-hud__btn, .tt-assist__btn, .tt-audio-btn, .tt-sound__toggle, .tt-sound__mute, .tt-btn {
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+.tt-hud__btn:active:not(:disabled), .tt-assist__btn:active:not(:disabled),
+.tt-audio-btn:active:not(:disabled), .tt-sound__toggle:active, .tt-sound__mute:active,
+.tt-btn:active:not(:disabled) { transform: translateY(3px) scale(0.97); }
+
+/* Al pasar el mouse (o con el teclado), el ícono hace un gesto según su función */
+:is(.tt-hud__btn, .tt-assist__btn, .tt-audio-btn, .tt-sound__toggle, .tt-sound__mute, .tt-btn):is(:hover, :focus-visible):not(:disabled) .tt-icon {
+  animation: tt-ico-hop 0.45s ease;
+}
+:is(button):is(:hover, :focus-visible):not(:disabled) .tt-icon[data-icon="mapa"] { animation: tt-ico-wiggle 0.6s ease; }
+:is(button):is(:hover, :focus-visible):not(:disabled) .tt-icon[data-icon="ayuda"] { animation: tt-ico-tilt 0.6s ease; }
+:is(button):is(:hover, :focus-visible):not(:disabled) .tt-icon[data-icon="salir"] { animation: tt-ico-out 0.6s ease; }
+:is(button):is(:hover, :focus-visible):not(:disabled) .tt-icon:is([data-icon="sonido"], [data-icon="silencio"], [data-icon="audifonos"]) { animation: tt-ico-pulse 0.5s ease 2; }
+:is(button):is(:hover, :focus-visible):not(:disabled) .tt-icon[data-icon="pista"] { animation: tt-ico-shine 0.7s ease; }
+:is(button):is(:hover, :focus-visible):not(:disabled) .tt-icon[data-icon="idioma"] { animation: tt-ico-spin 0.7s ease; }
+:is(button):is(:hover, :focus-visible):not(:disabled) .tt-icon[data-icon="tortuga"] { animation: tt-ico-crawl 0.9s ease; }
+
+/* GO TO MAP, la acción principal: su mapa se mece solo cada pocos segundos */
+.tt-hud__btn--map .tt-icon { animation: tt-ico-idle 4s ease-in-out 1.5s infinite; }
+
+@keyframes tt-ico-hop    { 0%, 100% { transform: translateY(0); } 40% { transform: translateY(-4px); } 70% { transform: translateY(1px); } }
+@keyframes tt-ico-wiggle { 0%, 100% { transform: rotate(0); } 20% { transform: rotate(-12deg); } 45% { transform: rotate(10deg); } 70% { transform: rotate(-5deg); } }
+@keyframes tt-ico-tilt   { 0%, 100% { transform: rotate(0); } 35% { transform: rotate(-16deg) translateY(-2px); } 70% { transform: rotate(8deg); } }
+@keyframes tt-ico-out    { 0%, 100% { transform: translateX(0); } 45% { transform: translateX(4px); } }
+@keyframes tt-ico-pulse  { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.18); } }
+@keyframes tt-ico-shine  { 0%, 100% { filter: none; transform: scale(1); } 50% { filter: drop-shadow(0 0 6px #FFD24A); transform: scale(1.12); } }
+@keyframes tt-ico-spin   { from { transform: rotateY(0); } to { transform: rotateY(360deg); } }
+@keyframes tt-ico-crawl  { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(-3px); } }
+@keyframes tt-ico-idle   { 0%, 18%, 100% { transform: rotate(0); } 4% { transform: rotate(-12deg); } 8% { transform: rotate(10deg); } 12% { transform: rotate(-6deg); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .tt-hud__btn--map .tt-icon { animation: none; }
+}
+
+/* Íconos grandes del tutorial dentro de un marco como los botones del paquete Garden */
+.tt-tutorial__img {
+  box-sizing: content-box;
+  padding: 12px;
+  background: #FFF7E4;
+  border: 4px solid #745573;
+  border-radius: 24px;
+  box-shadow: inset 0 -6px 0 #E5C8B6, 0 4px 0 #745573;
+}
